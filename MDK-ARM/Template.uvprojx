@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx,USE_HAL_DRIVER,STM32F407xx,ARM_MATH_CM4,ARM_MATH_ROUNDING,ARM_MATH_MATRIX_CHECK</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../algorithm/DSP;../algorithm/LIB;../algorithm/Mahony;../algorithm/Memory;../algorithm/PID;../application;../bsp;../device;../Config</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../application;..\EC_lib\algorithm\DSP;..\EC_lib\algorithm\LIB;..\EC_lib\algorithm\Mahony;..\EC_lib\algorithm\Memory;..\EC_lib\algorithm\PID;..\EC_lib\bsp;..\EC_lib\config;..\EC_lib\device</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -611,106 +611,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>algorithm</GroupName>
-          <Files>
-            <File>
-              <FileName>arm_cortexM4lf_math.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\algorithm\DSP\arm_cortexM4lf_math.lib</FilePath>
-            </File>
-            <File>
-              <FileName>user_lib.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\algorithm\LIB\user_lib.c</FilePath>
-            </File>
-            <File>
-              <FileName>MahonyAHRS.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\algorithm\Mahony\MahonyAHRS.c</FilePath>
-            </File>
-            <File>
-              <FileName>pid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\algorithm\PID\pid.c</FilePath>
-            </File>
-            <File>
-              <FileName>loop_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\algorithm\Memory\loop_fifo.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>bsp</GroupName>
-          <Files>
-            <File>
-              <FileName>bsp_delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\bsp\bsp_delay.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_imu_pwm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\bsp\bsp_imu_pwm.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\bsp\bsp_led.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\bsp\bsp_spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_can.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\bsp\bsp_can.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_usart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\bsp\bsp_usart.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>device</GroupName>
-          <Files>
-            <File>
-              <FileName>BMI088driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\device\BMI088driver.c</FilePath>
-            </File>
-            <File>
-              <FileName>BMI088Middleware.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\device\BMI088Middleware.c</FilePath>
-            </File>
-            <File>
-              <FileName>Motor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\device\Motor.c</FilePath>
-            </File>
-            <File>
-              <FileName>Remote.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\device\Remote.c</FilePath>
-            </File>
-            <File>
-              <FileName>AimbotCan.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\device\AimbotCan.c</FilePath>
-            </File>
-            <File>
-              <FileName>RefereeCan.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\device\RefereeCan.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>application</GroupName>
           <Files>
             <File>
@@ -736,32 +636,127 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>config</GroupName>
+          <GroupName>EC_lib/bsp</GroupName>
           <Files>
             <File>
-              <FileName>struct_typedef.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Config\struct_typedef.h</FilePath>
+              <FileName>bsp_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\bsp\bsp_can.c</FilePath>
             </File>
             <File>
-              <FileName>Setting.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Config\Setting.h</FilePath>
+              <FileName>bsp_delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\bsp\bsp_delay.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_imu_pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\bsp\bsp_imu_pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\bsp\bsp_led.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\bsp\bsp_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\bsp\bsp_usart.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>EC_lib/device</GroupName>
+          <Files>
+            <File>
+              <FileName>AimbotCan.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\device\AimbotCan.c</FilePath>
+            </File>
+            <File>
+              <FileName>BMI088driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\device\BMI088driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>BMI088Middleware.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\device\BMI088Middleware.c</FilePath>
+            </File>
+            <File>
+              <FileName>Motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\device\Motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>RefereeCan.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\device\RefereeCan.c</FilePath>
+            </File>
+            <File>
+              <FileName>Remote.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\device\Remote.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>EC_lib/algorithm</GroupName>
+          <Files>
+            <File>
+              <FileName>pid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\algorithm\PID\pid.c</FilePath>
+            </File>
+            <File>
+              <FileName>loop_fifo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\algorithm\Memory\loop_fifo.c</FilePath>
+            </File>
+            <File>
+              <FileName>MahonyAHRS.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\algorithm\Mahony\MahonyAHRS.c</FilePath>
+            </File>
+            <File>
+              <FileName>user_lib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\algorithm\LIB\user_lib.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>EC_lib/config</GroupName>
+          <Files>
             <File>
               <FileName>CanPacket.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Config\CanPacket.h</FilePath>
-            </File>
-            <File>
-              <FileName>Infantry4KeyMap.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Config\Infantry4KeyMap.h</FilePath>
+              <FilePath>..\EC_lib\Config\CanPacket.h</FilePath>
             </File>
             <File>
               <FileName>Infantry3Parameter.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Config\Infantry3Parameter.h</FilePath>
+              <FilePath>..\EC_lib\Config\Infantry3Parameter.h</FilePath>
+            </File>
+            <File>
+              <FileName>Infantry4KeyMap.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\EC_lib\Config\Infantry4KeyMap.h</FilePath>
+            </File>
+            <File>
+              <FileName>Setting.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\EC_lib\Config\Setting.h</FilePath>
+            </File>
+            <File>
+              <FileName>struct_typedef.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\EC_lib\Config\struct_typedef.h</FilePath>
             </File>
           </Files>
         </Group>
