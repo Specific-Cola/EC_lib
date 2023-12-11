@@ -641,32 +641,32 @@
             <File>
               <FileName>bsp_can.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EC_lib\bsp\bsp_can.c</FilePath>
+              <FilePath>..\EC_lib\bsp\src\bsp_can.c</FilePath>
             </File>
             <File>
               <FileName>bsp_delay.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EC_lib\bsp\bsp_delay.c</FilePath>
+              <FilePath>..\EC_lib\bsp\src\bsp_delay.c</FilePath>
             </File>
             <File>
               <FileName>bsp_imu_pwm.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EC_lib\bsp\bsp_imu_pwm.c</FilePath>
+              <FilePath>..\EC_lib\bsp\src\bsp_imu_pwm.c</FilePath>
             </File>
             <File>
               <FileName>bsp_led.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EC_lib\bsp\bsp_led.c</FilePath>
+              <FilePath>..\EC_lib\bsp\src\bsp_led.c</FilePath>
             </File>
             <File>
               <FileName>bsp_spi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EC_lib\bsp\bsp_spi.c</FilePath>
+              <FilePath>..\EC_lib\bsp\src\bsp_spi.c</FilePath>
             </File>
             <File>
               <FileName>bsp_usart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EC_lib\bsp\bsp_usart.c</FilePath>
+              <FilePath>..\EC_lib\bsp\src\bsp_usart.c</FilePath>
             </File>
           </Files>
         </Group>
