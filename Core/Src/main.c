@@ -30,7 +30,6 @@
 /* USER CODE BEGIN Includes */
 #include "bsp_delay.h"
 #include "bsp_can.h"
-#include "Remote.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -109,25 +108,8 @@ int main(void)
   MX_TIM6_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  delay_init();
-  remote_control_init();
-  can_filter_init();
-  HAL_TIM_Base_Start_IT(&htim2);
-  HAL_TIM_Base_Start_IT(&htim3);
-  HAL_Delay(1);
-  HAL_TIM_Base_Start_IT(&htim4);
-  HAL_TIM_Base_Start_IT(&htim5);
-  HAL_Delay(1);
-  HAL_TIM_Base_Start_IT(&htim6);
+  delayInit();
   
-  HAL_TIM_PWM_Start(&htim10, TIM_CHANNEL_1);
-  
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-
-  HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(LED_B_GPIO_Port, LED_B_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(Laser_GPIO_Port, Laser_Pin, GPIO_PIN_SET);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

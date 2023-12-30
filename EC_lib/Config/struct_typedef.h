@@ -1,10 +1,3 @@
-/*  
-                IRobot  EC_lib
-        仅供交流使用，禁止商用
-        最终解释权归西电IRobot电控组
-        specificcola@proton.me
-
-*/
 #ifndef STRUCT_TYPEDEF_H
 #define STRUCT_TYPEDEF_H
 
@@ -29,11 +22,12 @@ typedef enum{
     TRUE=1
 }Bool_t;
 typedef enum{
-    SUCCESS=0,  
-    ERROR=1
+    OK=0,  
+    NO=1
 }Return_t;
 
-
+#define RETURN_ERROR    NO
+#define RETURN_SUCCESS  OK
 
 #endif
 
