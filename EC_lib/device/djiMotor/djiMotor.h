@@ -14,6 +14,7 @@
 #define DJIMOTOR_H__
 
 #include "struct_typedef.h"
+#define 
 
 typedef enum
 {
@@ -44,7 +45,7 @@ typedef struct{
 
 void djiMotorAdd(DJI_Motor_t *motor);
 void djiMotorDelete(DJI_Motor_t *motor);
-void djiMotorInfoUpdate(DJI_Motor_t *motor);
+void djiMotorInfoUpdate(DJI_Motor_t *motor,uint8_t *data);
 void djiMotorSpeedControl(DJI_Motor_t *motor);
 void djiMotorPositionControl(DJI_Motor_t *motor);
 Return_t djiMotorSendMessage(DJI_Motor_t *motor);
