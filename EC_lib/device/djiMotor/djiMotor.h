@@ -14,7 +14,7 @@
 #define DJIMOTOR_H__
 
 #include "struct_typedef.h"
-#define 
+#define MAX_DJI_MOTOR_NUM      21 //姑且算一个can7个电机
 
 typedef enum
 {
@@ -43,7 +43,7 @@ typedef struct{
 	uint16_t motor_rx_id;
 }DJI_Motor_t;
 
-void djiMotorAdd(DJI_Motor_t *motor);
+DJI_Motor_t *djiMotorAdd(DJI_Motor_t *motor);
 void djiMotorDelete(DJI_Motor_t *motor);
 void djiMotorInfoUpdate(DJI_Motor_t *motor,uint8_t *data);
 void djiMotorSpeedControl(DJI_Motor_t *motor);
