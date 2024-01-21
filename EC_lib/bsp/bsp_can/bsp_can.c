@@ -15,10 +15,10 @@
 #include "stdlib.h"
 #include "main.h"
 
-static  Can_Device_t *can_device[CAN_MX_REGISTER_CNT] = {NULL};
+  Can_Device_t *can_device[CAN_MX_REGISTER_CNT] = {NULL};
 static uint8_t id_cnt; // 全局CAN实例索引,每次有新的模块注册会自增
 
-void canFilterConfig(Can_Device_t *device)   //后面滤波器配置一下，保证can稳定传输
+void canFilterConfig(Can_Device_t *device)   //todo  :  后面滤波器配置一下，保证can稳定传输
 {
     CAN_FilterTypeDef can_filter_config;
     can_filter_config.FilterActivation = ENABLE;
@@ -124,5 +124,11 @@ static void canReceiveMessage(CAN_HandleTypeDef *hcan)
         }
     }
 
+
+}
+
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
+{
+    canReceiveMessage(hcan);
 
 }

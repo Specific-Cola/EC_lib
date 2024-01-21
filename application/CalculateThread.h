@@ -2,6 +2,6 @@
 #define CALCULATE_H__
 
 
-void CalculateThread(void);
+void CalculateThread(void const * argument);
 
 #endif 

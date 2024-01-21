@@ -30,6 +30,7 @@
 /* USER CODE BEGIN Includes */
 #include "bsp_delay.h"
 #include "bsp_can.h"
+#include "bsp_dwt.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -109,7 +110,7 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   delayInit();
-  
+  DWT_Init(168);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

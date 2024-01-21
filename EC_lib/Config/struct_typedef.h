@@ -25,6 +25,10 @@ typedef enum{
     OK=0,  
     NO=1
 }Return_t;
+enum{
+    Online = 0,
+    Offline = 1
+};
 
 #define RETURN_ERROR    NO
 #define RETURN_SUCCESS  OK
