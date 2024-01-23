@@ -46,7 +46,7 @@ typedef struct{
 
 typedef struct{
 	uint8_t statu;  //online 0  / offline 1 
-	uint8_t motor_type; //6020   3508   2006   need add pls contact lwt
+	Motor_type_t motor_type; //6020   3508   2006   need add pls contact lwt
     Motor_Info_t state_interfaces;
     Can_Device_t *can_info;
     Command_t command_interfaces;
@@ -54,12 +54,18 @@ typedef struct{
 }DJI_Motor_t;
 
 typedef struct{
+	Motor_type_t motor_type;
+	uint8_t id;
+	CAN_HandleTypeDef *hcan;
+}DJI_Motor_Register_t;
+
+typedef struct{
     
     PIDInstance *pid;
 
 }Speed_Controller_t;
 
-DJI_Motor_t *djiMotorAdd(uint8_t id ,uint8_t type,CAN_HandleTypeDef *hcan);
+DJI_Motor_t *djiMotorAdd(DJI_Motor_Register_t *reg);
 void djiMotorDelete(DJI_Motor_t *motor);
 void djiMotorInfoUpdate(DJI_Motor_t *motor,uint8_t *data);
 void djiMotorSpeedControl(DJI_Motor_t *motor,Speed_Controller_t *controller);
