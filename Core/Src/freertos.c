@@ -25,17 +25,14 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "AttitudeThread.h"
+
 #include "CalculateThread.h"
-#include "DebugThread.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
 osThreadId CalcThreadHandler;
-osThreadId AttudThreadHandler;
-osThreadId DebugThreadHandle;
 
 /* USER CODE END PTD */
 
@@ -115,16 +112,12 @@ void MX_FREERTOS_Init(void) {
   /* add threads, ... */
   
   /* definition and creation of Attitude */
-  osThreadDef(Attitude, AttitudeThread, osPriorityRealtime, 0, 1024);
-  AttudThreadHandler = osThreadCreate(osThread(Attitude), NULL);
-
+  
   /* definition and creation of Calculate */
   osThreadDef(Calculate, CalculateThread, osPriorityHigh, 0, 1024);
   CalcThreadHandler = osThreadCreate(osThread(Calculate), NULL);
   
-  /* definition and creation of Debug */
-  osThreadDef(Debug, DebugThread, osPriorityNormal, 0, 512);
-  DebugThreadHandle = osThreadCreate(osThread(Debug), NULL);
+  
   
   /* USER CODE END RTOS_THREADS */
 

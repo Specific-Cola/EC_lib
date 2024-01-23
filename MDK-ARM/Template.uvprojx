@@ -189,7 +189,7 @@
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>0</useUlib>
+            <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -337,9 +337,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_HAL_DRIVER,STM32F407xx,USE_HAL_DRIVER,STM32F407xx,ARM_MATH_CM4,ARM_MATH_ROUNDING,ARM_MATH_MATRIX_CHECK</Define>
+              <Define>USE_HAL_DRIVER,STM32F407xx,ARM_MATH_CM4,ARM_MATH_ROUNDING,ARM_MATH_MATRIX_CHECK,__TARGET_FPU_VFP,__FPU_PRESENT</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../application;..\EC_lib\algorithm\DSP;..\EC_lib\algorithm\LIB;..\EC_lib\algorithm\Mahony;..\EC_lib\algorithm\Memory;..\EC_lib\algorithm\PID;..\EC_lib\bsp;..\EC_lib\config;..\EC_lib\device</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../application;..\EC_lib\algorithm\PID;..\EC_lib\config;..\EC_lib\bsp\bsp_can;..\EC_lib\bsp\bsp_uart;..\EC_lib\bsp\bsp_spi;..\EC_lib\bsp\bsp_pwm;..\EC_lib\bsp\bsp_delay;..\EC_lib\algorithm\crc;..\EC_lib\algorithm\LQR;..\EC_lib\algorithm\KalmanFilter;..\EC_lib\algorithm;..\Drivers\CMSIS\DSP\Include;..\EC_lib\bsp\bsp_dwt;..\EC_lib\device\djiMotor</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -614,59 +614,113 @@
           <GroupName>application</GroupName>
           <Files>
             <File>
-              <FileName>AttitudeThread.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\application\AttitudeThread.c</FilePath>
-            </File>
-            <File>
               <FileName>CalculateThread.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\application\CalculateThread.c</FilePath>
-            </File>
-            <File>
-              <FileName>DebugThread.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\application\DebugThread.c</FilePath>
-            </File>
-            <File>
-              <FileName>InterruptService.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\application\InterruptService.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>EC_lib/bsp</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>2</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <uGnu>2</uGnu>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>2</v6Lto>
+                <v6WtE>2</v6WtE>
+                <v6Rtti>2</v6Rtti>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath>..\EC_lib\bsp\bsp_can;..\EC_lib\bsp\bsp_led</IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <ClangAsOpt>0</ClangAsOpt>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
           <Files>
             <File>
               <FileName>bsp_can.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EC_lib\bsp\bsp_can.c</FilePath>
+              <FilePath>..\EC_lib\bsp\bsp_can\bsp_can.c</FilePath>
             </File>
             <File>
               <FileName>bsp_delay.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EC_lib\bsp\bsp_delay.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_imu_pwm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EC_lib\bsp\bsp_imu_pwm.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EC_lib\bsp\bsp_led.c</FilePath>
+              <FilePath>..\EC_lib\bsp\bsp_delay\bsp_delay.c</FilePath>
             </File>
             <File>
               <FileName>bsp_spi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EC_lib\bsp\bsp_spi.c</FilePath>
+              <FilePath>..\EC_lib\bsp\bsp_spi\bsp_spi.c</FilePath>
             </File>
             <File>
               <FileName>bsp_usart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EC_lib\bsp\bsp_usart.c</FilePath>
+              <FilePath>..\EC_lib\bsp\bsp_uart\bsp_usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\bsp\bsp_pwm\bsp_pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_dwt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\bsp\bsp_dwt\bsp_dwt.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -674,34 +728,14 @@
           <GroupName>EC_lib/device</GroupName>
           <Files>
             <File>
-              <FileName>AimbotCan.c</FileName>
+              <FileName>djiMotor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EC_lib\device\AimbotCan.c</FilePath>
+              <FilePath>..\EC_lib\device\djiMotor\djiMotor.c</FilePath>
             </File>
             <File>
-              <FileName>BMI088driver.c</FileName>
+              <FileName>RM_remote.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EC_lib\device\BMI088driver.c</FilePath>
-            </File>
-            <File>
-              <FileName>BMI088Middleware.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EC_lib\device\BMI088Middleware.c</FilePath>
-            </File>
-            <File>
-              <FileName>Motor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EC_lib\device\Motor.c</FilePath>
-            </File>
-            <File>
-              <FileName>RefereeCan.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EC_lib\device\RefereeCan.c</FilePath>
-            </File>
-            <File>
-              <FileName>Remote.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EC_lib\device\Remote.c</FilePath>
+              <FilePath>..\EC_lib\device\RM_remote\RM_remote.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -709,24 +743,34 @@
           <GroupName>EC_lib/algorithm</GroupName>
           <Files>
             <File>
-              <FileName>pid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EC_lib\algorithm\PID\pid.c</FilePath>
-            </File>
-            <File>
-              <FileName>loop_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EC_lib\algorithm\Memory\loop_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>MahonyAHRS.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EC_lib\algorithm\Mahony\MahonyAHRS.c</FilePath>
-            </File>
-            <File>
               <FileName>user_lib.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EC_lib\algorithm\LIB\user_lib.c</FilePath>
+              <FilePath>..\EC_lib\algorithm\user_lib.c</FilePath>
+            </File>
+            <File>
+              <FileName>controller.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\algorithm\PID\controller.c</FilePath>
+            </File>
+            <File>
+              <FileName>kalman_filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\algorithm\KalmamFilter\kalman_filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>QuaternionEKF.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\algorithm\KalmamFilter\QuaternionEKF.c</FilePath>
+            </File>
+            <File>
+              <FileName>crc8.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\algorithm\crc\crc8.c</FilePath>
+            </File>
+            <File>
+              <FileName>crc16.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\algorithm\crc\crc16.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -739,16 +783,6 @@
               <FilePath>..\EC_lib\Config\CanPacket.h</FilePath>
             </File>
             <File>
-              <FileName>Infantry3Parameter.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\EC_lib\Config\Infantry3Parameter.h</FilePath>
-            </File>
-            <File>
-              <FileName>Infantry4KeyMap.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\EC_lib\Config\Infantry4KeyMap.h</FilePath>
-            </File>
-            <File>
               <FileName>Setting.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\EC_lib\Config\Setting.h</FilePath>
@@ -757,6 +791,51 @@
               <FileName>struct_typedef.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\EC_lib\Config\struct_typedef.h</FilePath>
+            </File>
+            <File>
+              <FileName>KeyMap.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\EC_lib\config\KeyMap.h</FilePath>
+            </File>
+            <File>
+              <FileName>Parameter.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\EC_lib\config\Parameter.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Drivers/CMSIS/DSP</GroupName>
+          <Files>
+            <File>
+              <FileName>arm_mat_add_f32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\CMSIS\DSP\Source\MatrixFunctions\arm_mat_add_f32.c</FilePath>
+            </File>
+            <File>
+              <FileName>arm_mat_mult_f32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\CMSIS\DSP\Source\MatrixFunctions\arm_mat_mult_f32.c</FilePath>
+            </File>
+            <File>
+              <FileName>arm_mat_inverse_f32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\CMSIS\DSP\Source\MatrixFunctions\arm_mat_inverse_f32.c</FilePath>
+            </File>
+            <File>
+              <FileName>arm_mat_trans_f32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\CMSIS\DSP\Source\MatrixFunctions\arm_mat_trans_f32.c</FilePath>
+            </File>
+            <File>
+              <FileName>arm_mat_sub_f32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\CMSIS\DSP\Source\MatrixFunctions\arm_mat_sub_f32.c</FilePath>
+            </File>
+            <File>
+              <FileName>arm_mat_init_f32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\CMSIS\DSP\Source\MatrixFunctions\arm_mat_init_f32.c</FilePath>
             </File>
           </Files>
         </Group>
