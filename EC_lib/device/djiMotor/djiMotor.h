@@ -56,12 +56,20 @@ typedef struct{
 }DJI_Motor_t;
 
 typedef struct{
+
+	Motor_type_t motor_type;
+	uint8_t id;
+	CAN_HandleTypeDef *hcan;
+}DJI_Motor_Register_t;
+
+typedef struct{
+    
     PIDInstance *pid;
 
 }Speed_Controller_t;
 
-DJI_Motor_t *djiMotorAdd(uint8_t id ,Motor_type_t type,CAN_HandleTypeDef *hcan);
-void djiMotorDelete(DJI_Motor_t *motor); //todo if anyone need pls contact lwt
+DJI_Motor_t *djiMotorAdd(DJI_Motor_Register_t *reg);
+void djiMotorDelete(DJI_Motor_t *motor);
 void djiMotorInfoUpdate(DJI_Motor_t *motor,uint8_t *data);
 void djiMotorSpeedControl(DJI_Motor_t *motor,Speed_Controller_t *controller);//todo    移到电机总
 Speed_Controller_t *speedControllerInit(PID_Init_Config_s *config);
