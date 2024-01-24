@@ -3,6 +3,7 @@
 #include "cmsis_os.h"
 #include "djiMotor.h"
 
+
 DJI_Motor_t *my_motor;
 
 Speed_Controller_t *my_controller;
@@ -31,6 +32,9 @@ void CalculateThread(void const * argument)
 		
 //		my_motor->command_interfaces.command=2000;
 		djiMotorSpeedControl(my_motor,my_controller);
+
+
+		
 		djiMotorSendMessage();
 		osDelay(1);
 	}

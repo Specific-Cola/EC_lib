@@ -56,7 +56,7 @@ static void usartStartReceive(Usart_Device_t* instance){
 		instance->usart_handle->hdmarx->Instance->M1AR = (uint32_t)(instance->rx_buff2[1]);
 		//data length
 		//数据长度
-		instance->usart_handle->hdmarx->Instance->NDTR = instance->rx_len;
+		instance->usart_handle->hdmarx->Instance->NDTR = USART_RXBUFF_LIMIT/2;
 		//enable double memory buffer
 		//使能双缓冲区
 		SET_BIT(instance->usart_handle->hdmarx->Instance->CR, DMA_SxCR_DBM);
@@ -148,7 +148,7 @@ Return_t usartSendMessage(Usart_Device_t *instance, uint8_t *message, uint16_t t
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size) //todo  双缓存区如何接收
 {
     for (uint8_t i = 0; i < id_cnt; ++i)
-    { // find the instance which is being handled
+    { // find the instance which is being                                 handled
         if (huart == usart_device[i]->usart_handle)
         { // call the callback function if it is not NULL
             if (usart_device[i]->usart_device_callback != NULL)

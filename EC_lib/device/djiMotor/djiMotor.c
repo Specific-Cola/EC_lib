@@ -13,23 +13,25 @@
 #include "main.h"       
 #include "bsp_can.h"
 
- DJI_Motor_t *dji_motor[MAX_DJI_MOTOR_NUM];
+static DJI_Motor_t *dji_motor[MAX_DJI_MOTOR_NUM];
 static uint8_t id_cnt; //记录大疆电机数量
 static CAN_TxHeaderTypeDef  can_tx_message;
+
 static uint8_t   MotorSendBuffer_can1[24];
 static uint8_t   MotorSendBuffer_can2[24];
+
 static uint32_t             send_mail_box_can1;
 static uint32_t             send_mail_box_can2;
 
 
+
 DJI_Motor_t *djiMotorAdd(DJI_Motor_Register_t *reg)//使用can instance注册电机    //id就直接填写灯电调闪烁的次数
+
 {
     if (id_cnt > MAX_DJI_MOTOR_NUM) 
     {
         Error_Handler();//电机太多了
     }
-    
-    
     
     Can_Register_t can_reg;
     DJI_Motor_t *motor = (DJI_Motor_t *)malloc(sizeof(DJI_Motor_t));
@@ -89,7 +91,7 @@ Return_t djiMotorSendMessage()//不能使用bsp_can里面的发送函数，因�
 	
     for(uint8_t i =0;i<id_cnt;i++)
     {
-        if(dji_motor[i]->statu == Offline)
+        if(dji_motor[i]->statu == OFFLINE)
         {
             dji_motor[i]->command_interfaces.command = 0;
         }
@@ -192,5 +194,11 @@ Speed_Controller_t *speedControllerInit(PID_Init_Config_s *config)
     PIDInstance *instance = (PIDInstance *)malloc(sizeof(PIDInstance));
     PIDInit(instance, config);
     controller->pid = instance;
+
+/*
+    PIDInit(controller->pid, config);
+    这样写为什么不可以
+*/
+
     return controller;
 }
