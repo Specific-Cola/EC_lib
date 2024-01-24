@@ -16,8 +16,9 @@
 #include "struct_typedef.h"
 #include "bsp_can.h"
 #include "controller.h"
+#include "bsp_dwt.h"
 #define MAX_DJI_MOTOR_NUM      21 //姑且算一个can7个电机
-
+#define OFFLINE_TIME_MAX       0.1//单位s
 typedef enum
 {
     MOTOR_6020 = 0,
@@ -46,23 +47,23 @@ typedef struct{
 
 typedef struct{
 	uint8_t statu;  //online 0  / offline 1 
-	uint8_t motor_type; //6020   3508   2006   need add pls contact lwt
+	Motor_type_t motor_type; //6020   3508   2006   need add pls contact lwt
     Motor_Info_t state_interfaces;
     Can_Device_t *can_info;
     Command_t command_interfaces;
+                    
 
 }DJI_Motor_t;
 
 typedef struct{
-    
     PIDInstance *pid;
 
 }Speed_Controller_t;
 
-DJI_Motor_t *djiMotorAdd(uint8_t id ,uint8_t type,CAN_HandleTypeDef *hcan);
-void djiMotorDelete(DJI_Motor_t *motor);
+DJI_Motor_t *djiMotorAdd(uint8_t id ,Motor_type_t type,CAN_HandleTypeDef *hcan);
+void djiMotorDelete(DJI_Motor_t *motor); //todo if anyone need pls contact lwt
 void djiMotorInfoUpdate(DJI_Motor_t *motor,uint8_t *data);
-void djiMotorSpeedControl(DJI_Motor_t *motor,Speed_Controller_t *controller);
+void djiMotorSpeedControl(DJI_Motor_t *motor,Speed_Controller_t *controller);//todo    移到电机总
 Speed_Controller_t *speedControllerInit(PID_Init_Config_s *config);
 void djiMotorPositionControl(DJI_Motor_t *motor);
 Return_t djiMotorSendMessage();

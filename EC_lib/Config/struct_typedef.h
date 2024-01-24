@@ -26,8 +26,8 @@ typedef enum{
     NO=1
 }Return_t;
 enum{
-    Online = 0,
-    Offline = 1
+    ONLINE = 0,
+    OFFLINE = 1
 };
 
 #define RETURN_ERROR    NO

@@ -13,16 +13,16 @@
 #include "main.h"       
 #include "bsp_can.h"
 
- DJI_Motor_t *dji_motor[MAX_DJI_MOTOR_NUM];
+static DJI_Motor_t *dji_motor[MAX_DJI_MOTOR_NUM];
 static uint8_t id_cnt; //记录大疆电机数量
 static CAN_TxHeaderTypeDef  can_tx_message;
-uint8_t   MotorSendBuffer_can1[16];
+static uint8_t   MotorSendBuffer_can1[16];
 static uint8_t   MotorSendBuffer_can2[16];
 static uint32_t             send_mail_box_can1;
 static uint32_t             send_mail_box_can2;
 
 
-DJI_Motor_t *djiMotorAdd(uint8_t id , uint8_t type, CAN_HandleTypeDef *hcan)//使用can instance注册电机    //id就直接填写灯电调闪烁的次数
+DJI_Motor_t *djiMotorAdd(uint8_t id , Motor_type_t type, CAN_HandleTypeDef *hcan)//使用can instance注册电机    //id就直接填写灯电调闪烁的次数
 {
     if (id_cnt > MAX_DJI_MOTOR_NUM) 
     {
@@ -31,36 +31,36 @@ DJI_Motor_t *djiMotorAdd(uint8_t id , uint8_t type, CAN_HandleTypeDef *hcan)//�
     
     
     
-    Can_Register_t *can = (Can_Register_t *)malloc(sizeof(Can_Register_t));
+    Can_Register_t can;
     DJI_Motor_t *motor = (DJI_Motor_t *)malloc(sizeof(DJI_Motor_t));
-    memset(can, 0, sizeof(Can_Register_t));
+    memset(&can, 0, sizeof(Can_Register_t));
     memset(motor, 0, sizeof(DJI_Motor_t));
     motor->motor_type = type;
-    can->can_handle = hcan;
-    can->tx_dlc = 8; 
-    can->can_device_callback = djiMotorCallback;
+    can.can_handle = hcan;
+    can.tx_dlc = 8; 
+    can.can_device_callback = djiMotorCallback;
     switch (type)
     {
     case MOTOR_6020:
         if (id <= 4)
-            can->tx_id = 0x1FF;
+            can.tx_id = 0x1FF;
         else if (id > 4)
-            can->tx_id = 0x2FF;
-        can->rx_id = 0x204 + id;
+            can.tx_id = 0x2FF;
+        can.rx_id = 0x204 + id;
         break;
     case MOTOR_3508:
         if (id <= 4)
-            can->tx_id = 0x200;
+            can.tx_id = 0x200;
         else if (id > 4)
-            can->tx_id = 0x1FF;
-        can->rx_id = 0x200 + id;
+            can.tx_id = 0x1FF;
+        can.rx_id = 0x200 + id;
         break;
     case MOTOR_2006:
         if (id <= 4)
-            can->tx_id = 0x200;
+            can.tx_id = 0x200;
         else if (id > 4)
-            can->tx_id = 0x1FF;
-        can->rx_id = 0x200 + id;
+            can.tx_id = 0x1FF;
+        can.rx_id = 0x200 + id;
         break;
     default:
         Error_Handler();//电机类型不存在
@@ -68,13 +68,15 @@ DJI_Motor_t *djiMotorAdd(uint8_t id , uint8_t type, CAN_HandleTypeDef *hcan)//�
     }
     for(uint8_t i = 0; i < id_cnt; i++)
     {
-        if(dji_motor[i]->can_info->can_handle == hcan && dji_motor[i]->can_info->rx_id == can->rx_id)
+        if(dji_motor[i]->can_info->can_handle == hcan && dji_motor[i]->can_info->rx_id == can.rx_id)
         {
             Error_Handler();//电机id冲突
         }
     }
     
-    motor->can_info = canDeviceRegister(can);
+    motor->can_info = canDeviceRegister(&can);
+
+    motor->statu = ONLINE;
     dji_motor[id_cnt++] = motor;
 
     return motor;   
@@ -84,7 +86,7 @@ Return_t djiMotorSendMessage()//不能使用bsp_can里面的发送函数，因�
 {   
     for(uint8_t i =0;i<id_cnt;i++)
     {
-        if(dji_motor[i]->statu == Offline)
+        if(dji_motor[i]->statu == OFFLINE)
         {
             dji_motor[i]->command_interfaces.command = 0;
         }
@@ -166,5 +168,11 @@ Speed_Controller_t *speedControllerInit(PID_Init_Config_s *config)
     PIDInstance *instance = (PIDInstance *)malloc(sizeof(PIDInstance));
     PIDInit(instance, config);
     controller->pid = instance;
+
+/*
+    PIDInit(controller->pid, config);
+    这样写为什么不可以
+*/
+
     return controller;
 }
