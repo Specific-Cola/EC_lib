@@ -71,14 +71,9 @@ typedef __PACKED_STRUCT
 } RC_ctrl_t;
 
 
-typedef struct{                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-
-
-}Remote_info_t;
-
 typedef struct{
     uint8_t statu;
-    Remote_info_t state_interfaces;
+    RC_ctrl_t state_interfaces;
     Usart_Device_t *usart_info;
 
 
@@ -87,9 +82,37 @@ typedef struct{
 RM_Remote_t *rmRemoteAdd(UART_HandleTypeDef *huart);
 void rmRemoteDelete(RM_Remote_t *remote);
 void rmRemoteCallback(Usart_Device_t *instance);
-void rmRemoteIsError();
-void solve_RC_lost();
-void solve
+uint8_t rmRemoteIsError();
+void solveRCLost(void);
+void solveDataError(void);
+void sbus_to_rc(uint8_t dambufnum);
 
+extern bool_t CheakKeyPress(uint16_t Key);//长按触发
+extern bool_t CheakKeyPressOnce(uint16_t Key);//边沿触发
+// 归一化摇杆值
+extern fp32 RemoteChannalRightX();
+extern fp32 RemoteChannalRightY();
+extern fp32 RemoteChannalLeftX();
+extern fp32 RemoteChannalLeftY();
+extern fp32 RemoteDial();
+
+// 归一化鼠标移动
+extern fp32 MouseMoveX();
+extern fp32 MouseMoveY();
+
+// 鼠标左右键
+extern bool_t MousePressLeft();
+extern bool_t MousePressRight();
+
+// 拨杆位置检测
+extern bool_t SwitchRightUpSide();
+extern bool_t SwitchRightMidSide();
+extern bool_t SwitchRightDownSide();
+extern bool_t SwitchLeftUpSide();
+extern bool_t SwitchLeftMidSide();
+extern bool_t SwitchLeftDownSide();
+
+
+extern fp32 NormalizedLimit(fp32 input);
 #endif // !RM_REMOTE_H__
 
