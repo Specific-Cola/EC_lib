@@ -31,6 +31,7 @@
 #include "bsp_delay.h"
 #include "bsp_can.h"
 #include "bsp_dwt.h"
+#include "controller.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -108,9 +109,14 @@ int main(void)
   MX_TIM8_Init();
   MX_TIM6_Init();
   MX_TIM2_Init();
+  MX_TIM9_Init();
+  MX_TIM11_Init();
+  MX_TIM12_Init();
+  MX_TIM13_Init();
+  MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
   delayInit();
-  DWT_Init(168);
+  pidTimerInit();
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
@@ -177,6 +183,7 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
+//记得注释下面的HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)！！！！
 /* USER CODE END 4 */
 
 /**
@@ -187,18 +194,18 @@ void SystemClock_Config(void)
   * @param  htim : TIM handle
   * @retval None
   */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  /* USER CODE BEGIN Callback 0 */
+//void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+//{
+//  /* USER CODE BEGIN Callback 0 */
 
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM7) {
-    HAL_IncTick();
-  }
-  /* USER CODE BEGIN Callback 1 */
+//  /* USER CODE END Callback 0 */
+//  if (htim->Instance == TIM7) {
+//    HAL_IncTick();
+//  }
+//  /* USER CODE BEGIN Callback 1 */
 
-  /* USER CODE END Callback 1 */
-}
+//  /* USER CODE END Callback 1 */
+//}
 
 /**
   * @brief  This function is executed in case of error occurrence.

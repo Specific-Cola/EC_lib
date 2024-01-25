@@ -4,6 +4,9 @@
 #include "djiMotor.h"
 #include "RM_remote.h"
 
+#include <string.h>
+
+
 DJI_Motor_t *my_motor;
 
 Speed_Controller_t *my_controller;
@@ -25,13 +28,12 @@ void CalculateThread(void const * argument)
 	my_pid.MaxOut = 0x7fff;
 	my_pid.Improve = PID_IMPROVE_NONE;
 	my_motor = djiMotorAdd(&motor_reg);
-	my_motor->command_interfaces.speed_rpm = 20;
 	my_controller = speedControllerInit(&my_pid);
 	
 	my_remote = rmRemoteAdd(&huart3);
 	while(1)
 	{
-		
+		my_motor->command_interfaces.speed_rpm = my_remote->state_interfaces.rc.ch[0];
 //		my_motor->command_interfaces.command=2000;
 		djiMotorSpeedControl(my_motor,my_controller);
 

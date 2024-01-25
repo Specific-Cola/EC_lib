@@ -10,13 +10,13 @@
       <TargetName>Template</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6150000::V6.15::ARMCLANG</pCCUsed>
+      <pCCUsed>6180000::V6.18::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F407IGHx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F4xx_DFP.2.15.0</PackID>
+          <PackID>Keil.STM32F4xx_DFP.2.16.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000-0x2001BFFF) IRAM2(0x2001C000-0x2001FFFF) IROM(0x8000000-0x80FFFFF)  CLOCK(25000000) FPU2 CPUTYPE("Cortex-M4") TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -186,6 +186,7 @@
             <RvdsVP>2</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -339,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx,ARM_MATH_CM4,ARM_MATH_ROUNDING,ARM_MATH_MATRIX_CHECK,__TARGET_FPU_VFP,__FPU_PRESENT</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../application;../EC_lib/algorithm/PID;../EC_lib/config;../EC_lib/bsp/bsp_can;../EC_lib/bsp/bsp_uart;../EC_lib/bsp/bsp_spi;../EC_lib/bsp/bsp_pwm;../EC_lib/bsp/bsp_delay;../EC_lib/algorithm/crc;../EC_lib/algorithm/LQR;../EC_lib/algorithm/KalmanFilter;../EC_lib/algorithm;../Drivers/CMSIS/DSP/Include;../EC_lib/bsp/bsp_dwt;../EC_lib/device/djiMotor;../EC_lib/device/RM_remote</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/DSP/Include;../Drivers/CMSIS/Include;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../application;../EC_lib/config;../EC_lib/bsp/bsp_timer;../EC_lib/bsp/bsp_dwt;../EC_lib/bsp/bsp_can;../EC_lib/bsp/bsp_uart;../EC_lib/bsp/bsp_spi;../EC_lib/bsp/bsp_pwm;../EC_lib/bsp/bsp_delay;../EC_lib/algorithm;../EC_lib/algorithm/PID;../EC_lib/algorithm/crc;../EC_lib/algorithm/LQR;../EC_lib/algorithm/KalmanFilter;../EC_lib/device/RM_remote;..\EC_lib\device\Motor;..\EC_lib\device\Motor\djiMotor;..\EC_lib\device\Motor\DMMotor</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -722,20 +723,40 @@
               <FileType>1</FileType>
               <FilePath>..\EC_lib\bsp\bsp_dwt\bsp_dwt.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\bsp\bsp_timer\bsp_timer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>EC_lib/device</GroupName>
           <Files>
             <File>
-              <FileName>djiMotor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EC_lib\device\djiMotor\djiMotor.c</FilePath>
-            </File>
-            <File>
               <FileName>RM_remote.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\EC_lib\device\RM_remote\RM_remote.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>EC_lib/device/motor</GroupName>
+          <Files>
+            <File>
+              <FileName>Motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\device\Motor\Motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>djiMotor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\device\Motor\djiMotor\djiMotor.c</FilePath>
+            </File>
+            <File>
+              <FileName>DMMotor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\device\Motor\DMMotor\DMMotor.c</FilePath>
             </File>
           </Files>
         </Group>

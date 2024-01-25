@@ -15,7 +15,6 @@
 #define _BSP_DWT_H
 
 #include "main.h"
-#include "stdint.h"
 
 
 typedef struct
