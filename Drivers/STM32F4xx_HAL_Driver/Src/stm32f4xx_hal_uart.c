@@ -2357,7 +2357,6 @@ HAL_StatusTypeDef HAL_UART_AbortReceive_IT(UART_HandleTypeDef *huart)
   *                the configuration information for the specified UART module.
   * @retval None
   */
-uint16_t nb=0;
 void HAL_UART_IRQHandler(UART_HandleTypeDef *huart)
 {
   uint32_t isrflags   = READ_REG(huart->Instance->SR);
@@ -2501,7 +2500,6 @@ void HAL_UART_IRQHandler(UART_HandleTypeDef *huart)
          (DMA cplt callback will be called).
          Otherwise, if at least one data has already been received, IDLE event is to be notified to user */
       uint16_t nb_remaining_rx_data = (uint16_t) __HAL_DMA_GET_COUNTER(huart->hdmarx);
-		nb =nb_remaining_rx_data;
       if ((nb_remaining_rx_data > 0U)
           && (nb_remaining_rx_data < huart->RxXferSize))
       {

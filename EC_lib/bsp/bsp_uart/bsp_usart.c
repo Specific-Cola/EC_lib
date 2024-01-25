@@ -22,7 +22,7 @@ static void usartDMARestart(Usart_Device_t *instance)
 	switch (instance->rx_buff_num)
 	{
 	case 1:
-		HAL_UARTEx_ReceiveToIdle_DMA(instance->usart_handle, instance->rx_buff, USART_RXBUFF_LIMIT);
+		HAL_UARTEx_ReceiveToIdle_DMA(instance->usart_handle, instance->rx_buff, instance->rx_len);
         __HAL_DMA_DISABLE_IT(instance->usart_handle->hdmarx, DMA_IT_HT);
 		break;
 	case 2:
@@ -53,9 +53,8 @@ static void usartStartReceive(Usart_Device_t* instance){
 	
 	if(instance->rx_buff_num==1){
 		//单缓冲区
-		HAL_UARTEx_ReceiveToIdle_DMA(instance->usart_handle, instance->rx_buff, USART_RXBUFF_LIMIT);
+		HAL_UARTEx_ReceiveToIdle_DMA(instance->usart_handle, instance->rx_buff, instance->rx_len);
         __HAL_DMA_DISABLE_IT(instance->usart_handle->hdmarx, DMA_IT_HT);
-		
 	}
 	else if(instance->rx_buff_num==2){
 		//enable the DMA transfer for the receiver request
@@ -67,7 +66,7 @@ static void usartStartReceive(Usart_Device_t* instance){
     	__HAL_UART_ENABLE_IT(instance->usart_handle, UART_IT_IDLE);
 
     	//disable DMA
-    	//失效DMA
+    	//失效DMA          
     	__HAL_DMA_DISABLE(instance->usart_handle->hdmarx);
     while(instance->usart_handle->hdmarx->Instance->CR & DMA_SxCR_EN)
     {
@@ -182,7 +181,7 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size) //todo
             if (usart_device[i]->usart_device_callback != NULL)
             {
                 usart_device[i]->usart_device_callback(usart_device[i]);
-                // memset(usart_device[i]->rx_buff, 0, size); // 接收结束后清空buffer,对于变长数据是必要的   
+                memset(usart_device[i]->rx_buff, 0, size); // 接收结束后清空buffer,对于变长数据是必要的   
 				//如果需要清除，就在回调函数里清除
             }
             usartDMARestart(usart_device[i]);
@@ -190,6 +189,9 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size) //todo
         }
     }
 }
+
+uint64_t PE_cnt=0;
+uint64_t FE_cnt=0;
 
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
