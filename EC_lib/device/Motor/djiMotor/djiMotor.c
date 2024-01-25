@@ -10,12 +10,12 @@
 //
 //=====================================================================================================
 #include "djiMotor.h"
-#include "main.h"       
-#include "bsp_can.h"
+#include "main.h"
+#include <stdlib.h>
+#include <string.h>
 
 static DJI_Motor_t *dji_motor[MAX_DJI_MOTOR_NUM];
 static uint8_t id_cnt; //记录大疆电机数量
-static CAN_TxHeaderTypeDef  can_tx_message;
 
 static uint8_t   MotorSendBuffer_can1[24];
 static uint8_t   MotorSendBuffer_can2[24];
@@ -23,7 +23,17 @@ static uint8_t   MotorSendBuffer_can2[24];
 static uint32_t             send_mail_box_can1;
 static uint32_t             send_mail_box_can2;
 
-
+static void djiMotorCallback(Can_Device_t *instance)
+{
+    for(uint8_t i = 0; i < id_cnt;i++)
+    {
+        if(instance == dji_motor[i]->can_info)
+        {
+            djiMotorInfoUpdate(dji_motor[i],instance->rx_buff);
+            return;
+        }
+    }     
+}
 
 DJI_Motor_t *djiMotorAdd(DJI_Motor_Register_t *reg)//使用can instance注册电机    //id就直接填写灯电调闪烁的次数
 
@@ -69,22 +79,15 @@ DJI_Motor_t *djiMotorAdd(DJI_Motor_Register_t *reg)//使用can instance注册电
         Error_Handler();//电机类型不存在
         break;
     }
-    for(uint8_t i = 0; i < id_cnt; i++)
-    {
-        if(dji_motor[i]->can_info->can_handle == reg->hcan && dji_motor[i]->can_info->rx_id == can_reg.rx_id)
-        {
-            Error_Handler();//电机id冲突
-        }
-    }
     
-    motor->can_info = canDeviceRegister(&can_reg);
     motor->motor_type = reg->motor_type;
+    motor->can_info = canDeviceRegister(&can_reg);
     dji_motor[id_cnt++] = motor;
 
     return motor;   
 }
 
-Return_t djiMotorSendMessage()//不能使用bsp_can里面的发送函数，因为dji电机是广播模式
+Return_t djiMotorSendMessage()
 {   
 	
 	int16_t can_send_num[2][3]={{-1,-1,-1},{-1,-1,-1}};
@@ -156,19 +159,6 @@ Return_t djiMotorSendMessage()//不能使用bsp_can里面的发送函数，因�
     return RETURN_SUCCESS;
 }
 
-
-void djiMotorCallback(Can_Device_t *instance)
-{
-    for(uint8_t i = 0; i < id_cnt;i++)
-    {
-        if(instance->rx_id == dji_motor[i]->can_info->rx_id)
-        {
-            djiMotorInfoUpdate(dji_motor[i],instance->rx_buff);
-            return;
-        }
-    }     
-}
-
 void djiMotorInfoUpdate(DJI_Motor_t *motor,uint8_t *data)
 {
 	
@@ -181,10 +171,8 @@ void djiMotorInfoUpdate(DJI_Motor_t *motor,uint8_t *data)
 
 void djiMotorSpeedControl(DJI_Motor_t *motor,Speed_Controller_t *controller)
 {
-//    motor->command_interfaces.command =  (int16_t)PIDCalculate(controller->pid, motor->state_interfaces.speed_rpm,motor->command_interfaces.speed_rpm);
-	PIDCalculate(controller->pid, motor->state_interfaces.speed_rpm,motor->command_interfaces.speed_rpm);
-	motor->command_interfaces.command = controller->pid->DWT_CNT;
-//	motor->command_interfaces.command = controller->pid->Improve;
+    motor->command_interfaces.command =  (int16_t)PIDCalculate(controller->pid, motor->state_interfaces.speed_rpm,motor->command_interfaces.speed_rpm);
+
 }
 
 Speed_Controller_t *speedControllerInit(PID_Init_Config_s *config)

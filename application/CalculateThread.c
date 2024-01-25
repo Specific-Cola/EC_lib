@@ -4,6 +4,9 @@
 #include "djiMotor.h"
 #include "RM_remote.h"
 
+#include <string.h>
+
+
 DJI_Motor_t *my_motor;
 
 Speed_Controller_t *my_controller;

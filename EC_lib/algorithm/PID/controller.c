@@ -9,11 +9,20 @@
  * @copyrightCopyright (c) 2022 HNU YueLu EC all rights reserved
  */
 #include "controller.h"
+#include "arm_math.h"
+#include <stdlib.h>
 #include <string.h>
 
-static float getDeltaTime(uint32_t *cnt_last){
-	return DWT_GetDeltaT(cnt_last);
-}
+#if PID_USE_DWT
+#define getDeltaTime(T) DWT_GetDeltaT(T)
+#else
+Timer_Device_t *timer;
+
+#define PID_htim 	htim6
+#define getDeltaTime(T) timerGetDeltaTime(timer,T)
+
+#endif
+
 
 /* ----------------------------下面是pid优化环节的实现---------------------------- */
 
@@ -30,10 +39,10 @@ static void f_Changing_Integration_Rate(PIDInstance *pid)
     if (pid->Err * pid->Iout > 0)
     {
         // 积分呈累积趋势
-        if (abs(pid->Err) <= pid->CoefB)
+        if (fabsf(pid->Err) <= pid->CoefB)
             return; // Full integral
-        if (abs(pid->Err) <= (pid->CoefA + pid->CoefB))
-            pid->ITerm *= (pid->CoefA - abs(pid->Err) + pid->CoefB) / pid->CoefA;
+        if (fabsf(pid->Err) <= (pid->CoefA + pid->CoefB))
+            pid->ITerm *= (pid->CoefA - fabsf(pid->Err) + pid->CoefB) / pid->CoefA;
         else // 最大阈值,不使用积分
             pid->ITerm = 0;
     }
@@ -44,7 +53,7 @@ static void f_Integral_Limit(PIDInstance *pid)
     static float temp_Output, temp_Iout;
     temp_Iout = pid->Iout + pid->ITerm;
     temp_Output = pid->Pout + pid->Iout + pid->Dout;
-    if (abs(temp_Output) > pid->MaxOut)
+    if (fabsf(temp_Output) > pid->MaxOut)
     {
         if (pid->Err * pid->Iout > 0) // 积分却还在累积
         {
@@ -124,6 +133,26 @@ static void f_PID_ErrorHandle(PIDInstance *pid)
 /* ---------------------------下面是PID的外部算法接口--------------------------- */
 
 /**
+ * @brief 初始化PID所用时钟
+ *
+ * @param 无
+ */
+void pidTimerInit(){
+	#if PID_USE_DWT
+	DWT_Init(168);
+	#else
+	Timer_Register_t reg;
+	
+	reg.htim = &PID_htim;
+	reg.period = UINT16_MAX;
+	reg.timer_device_callback=NULL;
+	
+	timer = timerDeviceRegister(&reg);
+	#endif
+	
+}
+
+/**
  * @brief 初始化PID,设置参数和启用的优化环节,将其他数据置零
  *
  * @param pid    PID实例
@@ -162,7 +191,7 @@ float PIDCalculate(PIDInstance *pid, float measure, float ref)
     pid->Err = pid->Ref - pid->Measure;
 
     // 如果在死区外,则计算PID
-    if (abs(pid->Err) > pid->DeadBand)
+    if (fabsf(pid->Err) > pid->DeadBand)
     {
         // 基本的pid计算,使用位置式
         pid->Pout = pid->Kp * pid->Err;

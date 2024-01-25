@@ -14,16 +14,10 @@
 #define _CONTROLLER_H
 
 #include "main.h"
-#include "stdint.h"
-#include <string.h>
-#include "stdlib.h"
 #include "bsp_dwt.h"
-#include "arm_math.h"
-#include <math.h>
+#include "bsp_timer.h"
 
-#ifndef abs
-#define abs(x) ((x > 0) ? x : -x)
-#endif
+#define PID_USE_DWT 0
 
 // PID 优化环节使能标志位,通过位与可以判断启用的优化环节;也可以改成位域的形式
 typedef enum
@@ -132,5 +126,12 @@ void PIDInit(PIDInstance *pid, PID_Init_Config_s *config);
  * @return float  PID计算输出
  */
 float PIDCalculate(PIDInstance *pid, float measure, float ref);
+
+/**
+ * @brief 初始化PID所用时钟
+ *
+ * @param 无
+ */
+void pidTimerInit();
 
 #endif
