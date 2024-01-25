@@ -2,13 +2,13 @@
 #include "CalculateThread.h"
 #include "cmsis_os.h"
 #include "djiMotor.h"
-
+#include "RM_remote.h"
 
 DJI_Motor_t *my_motor;
 
 Speed_Controller_t *my_controller;
 PID_Init_Config_s my_pid;
-
+RM_Remote_t *my_remote;
 
 
 void CalculateThread(void const * argument)
@@ -27,6 +27,8 @@ void CalculateThread(void const * argument)
 	my_motor = djiMotorAdd(&motor_reg);
 	my_motor->command_interfaces.speed_rpm = 20;
 	my_controller = speedControllerInit(&my_pid);
+	
+	my_remote = rmRemoteAdd(&huart3);
 	while(1)
 	{
 		

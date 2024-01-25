@@ -15,6 +15,7 @@
 
 #include "struct_typedef.h"
 #include "main.h"
+#include "usart.h"
 
 #define USART_MX_REGISTER_CNT 3
 #define USART_RXBUFF_LIMIT 256 // 如果协议需要更大的buff,请修改这里

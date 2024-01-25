@@ -13,10 +13,38 @@
 #include <string.h>
 #include <stdlib.h>
 #include "bsp_usart.h"
-#include "usart.h"
 
 static  Usart_Device_t *usart_device[USART_MX_REGISTER_CNT] = {NULL};
 static uint8_t id_cnt=0; // 全局USART实例索引,每次有新的模块注册会自增
+
+static void usartDMARestart(Usart_Device_t *instance)
+{
+	switch (instance->rx_buff_num)
+	{
+	case 1:
+		HAL_UARTEx_ReceiveToIdle_DMA(instance->usart_handle, instance->rx_buff, USART_RXBUFF_LIMIT);
+        __HAL_DMA_DISABLE_IT(instance->usart_handle->hdmarx, DMA_IT_HT);
+		break;
+	case 2:
+		//enable the DMA transfer for the receiver request
+    	//使能DMA串口接收
+    	SET_BIT(instance->usart_handle->Instance->CR3, USART_CR3_DMAR);
+    	//enalbe idle interrupt
+    	//使能空闲中断
+    	__HAL_UART_ENABLE_IT(instance->usart_handle, UART_IT_IDLE);
+		//打开回调函数
+		instance->usart_handle->ReceptionType = HAL_UART_RECEPTION_TOIDLE;
+		instance->usart_handle->RxXferSize = USART_RXBUFF_LIMIT/2;
+		__HAL_DMA_ENABLE(instance->usart_handle->hdmarx);
+		break;
+	default:
+		break;
+	}
+}
+
+
+
+
 
 static void usartStartReceive(Usart_Device_t* instance){
 	if(instance==NULL){
@@ -25,28 +53,28 @@ static void usartStartReceive(Usart_Device_t* instance){
 	
 	if(instance->rx_buff_num==1){
 		//单缓冲区
-		HAL_UARTEx_ReceiveToIdle_DMA(instance->usart_handle, instance->rx_buff, instance->rx_buff_num);
+		HAL_UARTEx_ReceiveToIdle_DMA(instance->usart_handle, instance->rx_buff, USART_RXBUFF_LIMIT);
         __HAL_DMA_DISABLE_IT(instance->usart_handle->hdmarx, DMA_IT_HT);
-		
 		
 	}
 	else if(instance->rx_buff_num==2){
-		//双缓冲区
-		
 		//enable the DMA transfer for the receiver request
-		//使能DMA串口接收
-		SET_BIT(instance->usart_handle->Instance->CR3, USART_CR3_DMAR);
+    	//使能DMA串口接收
+    	SET_BIT(instance->usart_handle->Instance->CR3, USART_CR3_DMAR);
 
-		//enalbe idle interrupt
-		//使能空闲中断
-		__HAL_UART_ENABLE_IT(instance->usart_handle, UART_IT_IDLE);
+    	//enalbe idle interrupt
+    	//使能空闲中断
+    	__HAL_UART_ENABLE_IT(instance->usart_handle, UART_IT_IDLE);
 
-		//disable DMA
-		//失效DMA
-		do{
-			__HAL_DMA_DISABLE(instance->usart_handle->hdmarx);
-		}while(instance->usart_handle->hdmarx->Instance->CR & DMA_SxCR_EN);
+    	//disable DMA
+    	//失效DMA
+    	__HAL_DMA_DISABLE(instance->usart_handle->hdmarx);
+    while(instance->usart_handle->hdmarx->Instance->CR & DMA_SxCR_EN)
+    {
+        __HAL_DMA_DISABLE(instance->usart_handle->hdmarx);
+    }
 
+		//双缓冲区
 		instance->usart_handle->hdmarx->Instance->PAR = (uint32_t) & (USART3->DR);
 		//memory buffer 1
 		//内存缓冲区1
@@ -60,12 +88,12 @@ static void usartStartReceive(Usart_Device_t* instance){
 		//enable double memory buffer
 		//使能双缓冲区
 		SET_BIT(instance->usart_handle->hdmarx->Instance->CR, DMA_SxCR_DBM);
-
 		//enable DMA
-		//使能DMA
-		__HAL_DMA_ENABLE(instance->usart_handle->hdmarx);
-
-		__HAL_DMA_DISABLE_IT(instance->usart_handle->hdmarx, DMA_IT_HT);//关闭半传输中断
+    	//使能DMA
+		instance->usart_handle->ReceptionType = HAL_UART_RECEPTION_TOIDLE;
+		instance->usart_handle->RxXferSize = USART_RXBUFF_LIMIT/2;
+    	__HAL_DMA_ENABLE(instance->usart_handle->hdmarx);
+		
 	}
 	else{
 		Error_Handler();
@@ -154,10 +182,10 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size) //todo
             if (usart_device[i]->usart_device_callback != NULL)
             {
                 usart_device[i]->usart_device_callback(usart_device[i]);
-                memset(usart_device[i]->rx_buff, 0, size); // 接收结束后清空buffer,对于变长数据是必要的
+                // memset(usart_device[i]->rx_buff, 0, size); // 接收结束后清空buffer,对于变长数据是必要的   
+				//如果需要清除，就在回调函数里清除
             }
-            HAL_UARTEx_ReceiveToIdle_DMA(usart_device[i]->usart_handle, usart_device[i]->rx_buff, usart_device[i]->rx_buff_num);
-            __HAL_DMA_DISABLE_IT(usart_device[i]->usart_handle->hdmarx, DMA_IT_HT);
+            usartDMARestart(usart_device[i]);
             return; // break the loop
         }
     }
@@ -169,9 +197,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
     {
         if (huart == usart_device[i]->usart_handle)
         {
-            HAL_UARTEx_ReceiveToIdle_DMA(usart_device[i]->usart_handle, usart_device[i]->rx_buff, usart_device[i]->rx_buff_num);
-            __HAL_DMA_DISABLE_IT(usart_device[i]->usart_handle->hdmarx, DMA_IT_HT);
-            
+            usartDMARestart(usart_device[i]);
             return;
         }
     }

@@ -32,6 +32,7 @@ enum{
 
 #define RETURN_ERROR    NO
 #define RETURN_SUCCESS  OK
+#define bool_t          Bool_t
 
 #endif
 
