@@ -113,9 +113,9 @@ void dmMotorInfoUpdate(DM_Motor_t *motor,uint8_t *data){
 	motor->state_interfaces.vel = ((uint16_t)data[3]<<4)|(data[4]>>4);
 	motor->state_interfaces.velocity = uint_to_float(motor->state_interfaces.vel,-motor->v_max,motor->v_max,12);
 	
-	tmp = ((uint16_t)(data[4]&0xf)<<8)|(data[5]);
-	ptr->t = uint_to_float(tmp,-ptr->TMAX,ptr->TMAX,12);
+	motor->state_interfaces.t = ((uint16_t)(data[4]&0xf)<<8)|(data[5]);
+	motor->state_interfaces.torque = uint_to_float(motor->state_interfaces.t,-motor->state_interfaces.torque,motor->state_interfaces.torque,12);
 	
-	ptr->T_MOS = RXdata[6];
-	ptr->T_Rotor = RXdata[7];
+	motor->state_interfaces.t_mos = data[6];
+	motor->state_interfaces.t_rotor = data[7];
 }
