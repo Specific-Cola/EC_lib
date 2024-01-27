@@ -66,14 +66,24 @@ typedef struct{
 typedef struct{
     
     PIDInstance *pid;
+    float *fdb_src;
 
 }Speed_Controller_t;
+typedef struct{
+
+    cascadePIDInstacne *cascade_pid;
+    float *out_fdb_src;
+    float *in_fdb_src;
+
+}Position_Controller_t;
 
 DJI_Motor_t *djiMotorAdd(DJI_Motor_Register_t *reg);
 void djiMotorDelete(DJI_Motor_t *motor);
 void djiMotorInfoUpdate(DJI_Motor_t *motor,uint8_t *data);
 void djiMotorSpeedControl(DJI_Motor_t *motor,Speed_Controller_t *controller);//todo    移到电机总
 Speed_Controller_t *speedControllerInit(PID_Init_Config_s *config);
-void djiMotorPositionControl(DJI_Motor_t *motor);
+void djiMotorPositionControl(DJI_Motor_t *motor,Position_Controller_t *controller);//todo   移到电机总
+Position_Controller_t *positionControllerInit(cascade_PID_Init_Config_s *config,float *out_fdb);
 Return_t djiMotorSendMessage();
+void djiMotor_SwitchRing(DJI_Motor_t *motor,Position_Controller_t *controller);
 #endif // !DJIMOTOR_H__

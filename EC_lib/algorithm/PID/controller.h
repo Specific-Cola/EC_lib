@@ -90,6 +90,12 @@ typedef struct
     PID_ErrorHandler_t ERRORHandler;
 } PIDInstance;
 
+typedef struct{
+    PIDInstance out_pid;
+    PIDInstance in_pid;
+
+}cascadePIDInstacne;
+
 /* 用于PID初始化的结构体*/
 typedef struct // config parameter
 {
@@ -109,6 +115,10 @@ typedef struct // config parameter
     float Derivative_LPF_RC;
 } PID_Init_Config_s;
 
+typedef struct{
+    PID_Init_Config_s out_pid_config;
+    PID_Init_Config_s in_pid_config;
+}cascade_PID_Init_Config_s;
 /**
  * @brief 初始化PID实例
  * @todo 待修改为统一的PIDRegister风格
@@ -116,7 +126,7 @@ typedef struct // config parameter
  * @param config PID初始化配置
  */
 void PIDInit(PIDInstance *pid, PID_Init_Config_s *config);
-
+void cascadePIDInit(cascadePIDInstacne *cascade_pid,cascade_PID_Init_Config_s *config);
 /**
  * @brief 计算PID输出
  *
@@ -126,7 +136,7 @@ void PIDInit(PIDInstance *pid, PID_Init_Config_s *config);
  * @return float  PID计算输出
  */
 float PIDCalculate(PIDInstance *pid, float measure, float ref);
-
+float cascadePIDCalculate(cascadePIDInstacne *cascade_pid, float out_measure, float in_measure, float ref);
 /**
  * @brief 初始化PID所用时钟
  *
