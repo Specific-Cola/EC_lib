@@ -68,10 +68,12 @@ DM_Motor_t *dmMotorAdd(DM_Motor_Register_t *reg){
 	motor->kd_max		= reg->kd_max;
 	motor->kp_min		= reg->kp_min;
 	motor->kd_min		= reg->kd_min;
-	motor->statu		= 0;
 	motor->can_info 	= canDeviceRegister(&can_reg);
+	motor->statu		= 0;
 	
 	dm_motor[id_cnt++] = motor;
+	
+	dmMotorEnable(motor);
 	
 	return motor;
 }
@@ -85,8 +87,8 @@ Return_t dmMotorSendMessage(DM_Motor_t *motor){
 	
 	pos_tmp =float_to_uint(motor->command_interfaces.pos, -motor->p_max, motor->p_max, 16);
 	vel_tmp = float_to_uint(motor->command_interfaces.vel, -motor->v_max, motor->v_max, 12);
-	kp_tmp =float_to_uint(motor->command_interfaces.kp, 0, 500, 12);
-	kd_tmp =float_to_uint(motor->command_interfaces.kd, 0, 5, 12);
+	kp_tmp =float_to_uint(motor->command_interfaces.kp, motor->kp_min, motor->kp_max, 12);
+	kd_tmp =float_to_uint(motor->command_interfaces.kd, motor->kd_min, motor->kd_max, 12);
 	tor_tmp = float_to_uint(motor->command_interfaces.t, -motor->p_max, motor->p_max, 12);
 	
 	motor_send_buffer[0]= (pos_tmp >>8);
@@ -99,6 +101,7 @@ Return_t dmMotorSendMessage(DM_Motor_t *motor){
 	motor_send_buffer[7]= tor_tmp;
 
 	canSendMessage(motor->can_info,motor_send_buffer);
+	
 	return RETURN_SUCCESS;
 }
 
@@ -114,8 +117,61 @@ void dmMotorInfoUpdate(DM_Motor_t *motor,uint8_t *data){
 	motor->state_interfaces.velocity = uint_to_float(motor->state_interfaces.vel,-motor->v_max,motor->v_max,12);
 	
 	motor->state_interfaces.t = ((uint16_t)(data[4]&0xf)<<8)|(data[5]);
-	motor->state_interfaces.torque = uint_to_float(motor->state_interfaces.t,-motor->state_interfaces.torque,motor->state_interfaces.torque,12);
+	motor->state_interfaces.torque = uint_to_float(motor->state_interfaces.t,-motor->t_max,motor->t_max,12);
 	
 	motor->state_interfaces.t_mos = data[6];
 	motor->state_interfaces.t_rotor = data[7];
+}
+
+void dmMotorEnable(DM_Motor_t *motor){
+	
+	motor_send_buffer[0]= 0xFF;
+	motor_send_buffer[1]= 0xFF;
+	motor_send_buffer[2]= 0XFF;
+	motor_send_buffer[3]= 0xFF;
+	motor_send_buffer[4]= 0xFF;
+	motor_send_buffer[5]= 0xFF;
+	motor_send_buffer[6]= 0xFF;
+	motor_send_buffer[7]= 0xFC;
+
+	canSendMessage(motor->can_info,motor_send_buffer);
+}
+void dmMotorDisable(DM_Motor_t *motor){
+	
+	motor_send_buffer[0]= 0xFF;
+	motor_send_buffer[1]= 0xFF;
+	motor_send_buffer[2]= 0XFF;
+	motor_send_buffer[3]= 0xFF;
+	motor_send_buffer[4]= 0xFF;
+	motor_send_buffer[5]= 0xFF;
+	motor_send_buffer[6]= 0xFF;
+	motor_send_buffer[7]= 0xFD;
+
+	canSendMessage(motor->can_info,motor_send_buffer);
+}
+void dmMotorSetZero(DM_Motor_t *motor){
+	
+	motor_send_buffer[0]= 0xFF;
+	motor_send_buffer[1]= 0xFF;
+	motor_send_buffer[2]= 0XFF;
+	motor_send_buffer[3]= 0xFF;
+	motor_send_buffer[4]= 0xFF;
+	motor_send_buffer[5]= 0xFF;
+	motor_send_buffer[6]= 0xFF;
+	motor_send_buffer[7]= 0xFE;
+
+	canSendMessage(motor->can_info,motor_send_buffer);
+}
+void dmMotorClearError(DM_Motor_t *motor){
+	
+	motor_send_buffer[0]= 0xFF;
+	motor_send_buffer[1]= 0xFF;
+	motor_send_buffer[2]= 0XFF;
+	motor_send_buffer[3]= 0xFF;
+	motor_send_buffer[4]= 0xFF;
+	motor_send_buffer[5]= 0xFF;
+	motor_send_buffer[6]= 0xFF;
+	motor_send_buffer[7]= 0xFB;
+
+	canSendMessage(motor->can_info,motor_send_buffer);
 }
