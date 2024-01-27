@@ -55,21 +55,21 @@ DJI_Motor_t *djiMotorAdd(DJI_Motor_Register_t *reg)//使用can instance注册电
 	
     switch (reg->motor_type)
     {
-    case MOTOR_6020:
+    case DJI_MOTOR_6020:
         if (reg->id <= 4)
             can_reg.tx_id = 0x1FF;
         else if (reg->id > 4)
             can_reg.tx_id = 0x2FF;
         can_reg.rx_id = 0x204 + reg->id;
         break;
-    case MOTOR_3508:
+    case DJI_MOTOR_3508:
         if (reg->id <= 4)
             can_reg.tx_id = 0x200;
         else if (reg->id > 4)
             can_reg.tx_id = 0x1FF;
         can_reg.rx_id = 0x200 + reg->id;
         break;
-    case MOTOR_2006:
+    case DJI_MOTOR_2006:
         if (reg->id <= 4)
             can_reg.tx_id = 0x200;
         else if (reg->id > 4)
@@ -162,7 +162,6 @@ Return_t djiMotorSendMessage()
 
 void djiMotorInfoUpdate(DJI_Motor_t *motor,uint8_t *data)
 {
-	
     motor->state_interfaces.last_ecd = motor->state_interfaces.ecd;
     motor->state_interfaces.ecd = (uint16_t)((data)[0] << 8 | (data)[1]);
     motor->state_interfaces.speed_rpm = (uint16_t)((data)[2] << 8 | (data)[3]);
