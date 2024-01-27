@@ -23,9 +23,10 @@
 #define OFFLINE_TIME_MAX       0.1//单位s
 typedef enum
 {
-    MOTOR_6020 = 0,
-	MOTOR_3508,
-	MOTOR_2006,
+	DJI_MOTOR_MASK 	= 0x10,
+    DJI_MOTOR_6020 	= 0x11,
+	DJI_MOTOR_3508	= 0x12,
+	DJI_MOTOR_2006	= 0x13,
 	
 } DJI_Motor_type_t;
 
@@ -35,6 +36,7 @@ typedef struct{
     int16_t given_current;
     uint8_t temperate;
     uint16_t last_ecd;
+	
     fp32 angle;
 
 }DJI_Motor_Info_t;
@@ -45,22 +47,22 @@ typedef struct{
     int16_t current;
     int16_t voltage;
     int16_t command;
-}Command_t;
+}DJI_Command_t;
 
-typedef struct{
+typedef struct DJI_Motor_{
 	uint8_t statu;  //online 0  / offline 1 
 	DJI_Motor_type_t motor_type; //6020   3508   2006   need add pls contact lwt
     DJI_Motor_Info_t state_interfaces;
     Can_Device_t *can_info;
-    Command_t command_interfaces;
-                    
+    DJI_Command_t command_interfaces;
+	
 }DJI_Motor_t;
 
 typedef struct{
 
 	DJI_Motor_type_t motor_type;
-	uint8_t id;
 	CAN_HandleTypeDef *hcan;
+	uint8_t id;
 }DJI_Motor_Register_t;
 
 typedef struct{
