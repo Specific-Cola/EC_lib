@@ -12,7 +12,8 @@
 //=====================================================================================================
 #include "bsp_pwm.h"
 #include "main.h"
-#include "stdlib.h"
+
+#include <stdlib.h>
 #include <string.h>
 
 static PWM_Device_t *pwm_instance[PWM_DEVICE_CNT] = {NULL};

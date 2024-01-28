@@ -38,12 +38,21 @@ void dmMotorCallback(Can_Device_t *instance){
 		if(instance == dm_motor[i]->can_info)
         {
             dmMotorInfoUpdate(dm_motor[i],instance->rx_buff);
+			
+			if(dm_motor[i]->motorCallback!=NULL){
+				dm_motor[i]->motorCallback(dm_motor[i]);
+			}
+			
             return;
         }
 	}
 }
 
 DM_Motor_t *dmMotorAdd(DM_Motor_Register_t *reg){
+	
+	if(reg==NULL){
+		Error_Handler();//电机太多
+	}
 	
 	if(id_cnt > MAX_DM_MOTOR_NUM){
 		Error_Handler();//电机太多
@@ -79,6 +88,13 @@ DM_Motor_t *dmMotorAdd(DM_Motor_Register_t *reg){
 }
 
 Return_t dmMotorSendMessage(DM_Motor_t *motor){
+	
+
+	if(motor->statu == OFFLINE){
+		memset(&motor->command_interfaces,0,sizeof(motor->command_interfaces));
+		return RETURN_ERROR;
+	}
+	
 	uint16_t pos_tmp,vel_tmp,kp_tmp,kd_tmp,tor_tmp;
 	
 	float_constrain(motor->command_interfaces.pos, -motor->p_max, motor->p_max);
@@ -100,9 +116,21 @@ Return_t dmMotorSendMessage(DM_Motor_t *motor){
 	motor_send_buffer[6]= ((kd_tmp&0xF)<<4)|(tor_tmp>>8);
 	motor_send_buffer[7]= tor_tmp;
 
-	canSendMessage(motor->can_info,motor_send_buffer);
 	
-	return RETURN_SUCCESS;
+	return canSendMessage(motor->can_info,motor_send_buffer);
+}
+
+Return_t dmMotorSendAll(){
+	uint8_t i=0;
+	Return_t ret=RETURN_SUCCESS;
+	for(i=0;i<id_cnt;i++){
+		if(dmMotorSendMessage(dm_motor[i])==RETURN_ERROR){
+			ret=RETURN_ERROR;
+		}
+	}
+	
+	return ret;
+	
 }
 
 void dmMotorInfoUpdate(DM_Motor_t *motor,uint8_t *data){

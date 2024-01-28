@@ -30,7 +30,12 @@ static void djiMotorCallback(Can_Device_t *instance)
         if(instance == dji_motor[i]->can_info)
         {
             djiMotorInfoUpdate(dji_motor[i],instance->rx_buff);
-            return;
+			
+			if(dji_motor[i]->motorCallback!=NULL){
+				dji_motor[i]->motorCallback(dji_motor[i]);
+			}
+			
+            break;
         }
     }     
 }
@@ -91,12 +96,15 @@ Return_t djiMotorSendMessage()
 {   
 	
 	int16_t can_send_num[2][3]={{-1,-1,-1},{-1,-1,-1}};
+	Return_t ret=RETURN_SUCCESS;
 	
     for(uint8_t i =0;i<id_cnt;i++)
     {
         if(dji_motor[i]->statu == OFFLINE)
         {
             dji_motor[i]->command_interfaces.command = 0;
+			ret=RETURN_ERROR;
+			continue;
         }
 
 
@@ -156,36 +164,13 @@ Return_t djiMotorSendMessage()
 		canSendMessage(dji_motor[can_send_num[1][2]]->can_info,MotorSendBuffer_can2+16);
 	}
 	
-    return RETURN_SUCCESS;
+    return ret;
 }
 
 void djiMotorInfoUpdate(DJI_Motor_t *motor,uint8_t *data)
 {
-    motor->state_interfaces.last_ecd = motor->state_interfaces.ecd;
     motor->state_interfaces.ecd = (uint16_t)((data)[0] << 8 | (data)[1]);
     motor->state_interfaces.speed_rpm = (uint16_t)((data)[2] << 8 | (data)[3]);
     motor->state_interfaces.given_current = (uint16_t)((data)[4] << 8 | (data)[5]);
     motor->state_interfaces.temperate = (data)[6];
-}
-
-void djiMotorSpeedControl(DJI_Motor_t *motor,Speed_Controller_t *controller)
-{
-    motor->command_interfaces.command =  (int16_t)PIDCalculate(controller->pid, motor->state_interfaces.speed_rpm,motor->command_interfaces.speed_rpm);
-
-}
-
-Speed_Controller_t *speedControllerInit(PID_Init_Config_s *config)
-{
-    Speed_Controller_t *controller = (Speed_Controller_t *)malloc(sizeof(Speed_Controller_t));
-    memset(controller, 0, sizeof(Speed_Controller_t));
-    PIDInstance *instance = (PIDInstance *)malloc(sizeof(PIDInstance));
-    PIDInit(instance, config);
-    controller->pid = instance;
-
-/*
-    PIDInit(controller->pid, config);
-    这样写为什么不可以
-*/
-
-    return controller;
 }

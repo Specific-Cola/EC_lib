@@ -11,9 +11,9 @@
 //
 //=====================================================================================================
 #include "bsp_spi.h"
+
 #include <string.h>
-#include "stdlib.h"
-#include "main.h"
+#include <stdlib.h>
 /* 所有的spi instance保存于此,用于callback时判断中断来源*/
 static SPI_Device_t *spi_instance[SPI_DEVICE_CNT] = {NULL};
 static uint8_t id_cnt = 0; // 配合中断以及初始化

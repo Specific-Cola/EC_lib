@@ -10,10 +10,11 @@
 // 
 //
 //=====================================================================================================
-#ifndef BSP_PWM_H
-#define BSP_PWM_H
+#ifndef BSP_PWM_H__
+#define BSP_PWM_H__
 
 #include "struct_typedef.h"
+
 #define PWM_DEVICE_CNT     16
 
 typedef struct PWM_Device_

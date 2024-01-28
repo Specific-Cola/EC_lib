@@ -10,8 +10,8 @@
 // 
 //
 //=====================================================================================================
-#ifndef BSP_DELAY_H
-#define BSP_DELAY_H
+#ifndef BSP_DELAY_H__
+#define BSP_DELAY_H__
 #include "struct_typedef.h"
 
 extern void delayInit(void);

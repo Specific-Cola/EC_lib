@@ -10,9 +10,10 @@
 // 
 //
 //=====================================================================================================
+#include "bsp_usart.h"
+
 #include <string.h>
 #include <stdlib.h>
-#include "bsp_usart.h"
 
 static  Usart_Device_t *usart_device[USART_MX_REGISTER_CNT] = {NULL};
 static uint8_t id_cnt=0; // 全局USART实例索引,每次有新的模块注册会自增
