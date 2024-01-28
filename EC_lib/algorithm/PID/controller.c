@@ -169,7 +169,15 @@ void PIDInit(PIDInstance *pid, PID_Init_Config_s *config)
     // set rest of memory to 0
     getDeltaTime(&pid->DWT_CNT);
 }
-
+void cascadePIDInit(cascadePIDInstacne *cascade_pid,cascade_PID_Init_Config_s *config)
+{
+    memset(&cascade_pid->out_pid, 0, sizeof(PIDInstance));
+    memset(&cascade_pid->in_pid, 0, sizeof(PIDInstance));
+    memcpy(&cascade_pid->out_pid, &config->out_pid_config, sizeof(PID_Init_Config_s));
+    memcpy(&cascade_pid->in_pid, &config->in_pid_config, sizeof(PID_Init_Config_s));
+    getDeltaTime(&cascade_pid->out_pid.DWT_CNT);
+    getDeltaTime(&cascade_pid->in_pid.DWT_CNT);
+}
 /**
  * @brief          PID计算
  * @param[in]      PID结构体
@@ -240,4 +248,11 @@ float PIDCalculate(PIDInstance *pid, float measure, float ref)
     return pid->Output;
 }
 
+float cascadePIDCalculate(cascadePIDInstacne *cascade_pid, float out_measure,float in_measure,float ref)
+{
+    PIDCalculate(&cascade_pid->out_pid, out_measure, ref);
+    PIDCalculate(&cascade_pid->in_pid, in_measure,cascade_pid->out_pid.Output);
+    return cascade_pid->in_pid.Output;
+
+}
 
