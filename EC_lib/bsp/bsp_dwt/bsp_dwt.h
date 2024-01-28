@@ -11,10 +11,10 @@
  *
  ******************************************************************************
  */
-#ifndef _BSP_DWT_H
-#define _BSP_DWT_H
+#ifndef BSP_DWT_H__
+#define BSP_DWT_H__
 
-#include "main.h"
+#include "struct_typedef.h"
 
 
 typedef struct

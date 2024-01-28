@@ -10,12 +10,11 @@
 // 
 //
 //=====================================================================================================
-#ifndef BSP_CAN_H
-#define BSP_CAN_H
+#ifndef BSP_CAN_H__
+#define BSP_CAN_H__
 
 #include "struct_typedef.h"
 #include "can.h"
-#include "main.h"
 
 #define CAN_MX_REGISTER_CNT 16
 
@@ -51,6 +50,6 @@ Can_Device_t *canDeviceRegister(Can_Register_t *reg);
 extern void canOnInit(void);
 extern void canOnActivate(void);
 extern void canOnDeactivate(void);
-extern void canSendMessage(Can_Device_t *instance, uint8_t *message);
+extern Return_t canSendMessage(Can_Device_t *instance, uint8_t *message);
 
 #endif // BSP_CAN_H

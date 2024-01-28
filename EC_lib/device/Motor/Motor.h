@@ -30,9 +30,9 @@ typedef struct{
     fp32 angle;
     int32_t rounds;
     fp32 series_angle;
-    int32_t speed_rpm;
+    fp32 speed_rpm;
 	
-    fp32 given_current;
+    fp32 current;
     fp32 torque;
     int32_t temperate;
 }Motor_Info_t;
@@ -70,7 +70,7 @@ typedef struct{
     
     PIDInstance *pid;
 
-}Controller_t;
+}Speed_Controller_t;
 
 Motor_t *motorAdd(Motor_Register_t *reg);
 void motorEnable(Motor_t *motor);
@@ -79,6 +79,13 @@ void motorInfoUpdate(Motor_t *motor);
 void motorSpeedControl(Motor_t *motor,Speed_Controller_t *controller);//todo    移到电机总
 Speed_Controller_t *speedControllerInit(PID_Init_Config_s *config);
 void motorPositionControl(DJI_Motor_t *motor);
-Return_t motorSendMessage();
+
+//不建议使用，使用各电机中的发送函数
+Return_t motorSendAll();
+
+//建议使用以下函数发送
+extern Return_t djiMotorSendMessage();
+extern Return_t dmMotorSendMessage(DM_Motor_t *motor);
+extern Return_t dmMotorSendAll();
 
 #endif

@@ -10,11 +10,10 @@
 // 
 //
 //=====================================================================================================
-#ifndef BSP_USART_H
-#define BSP_USART_H
+#ifndef BSP_USART_H__
+#define BSP_USART_H__
 
 #include "struct_typedef.h"
-#include "main.h"
 #include "usart.h"
 
 #define USART_MX_REGISTER_CNT 3
