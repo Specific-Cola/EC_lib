@@ -57,7 +57,7 @@ typedef struct
 } SPI_Register_t;
 
 
-SPI_Device_t *SPIRegister(SPI_Register_t *conf);
+SPI_Device_t *spiRegister(SPI_Register_t *conf);
 
 
 

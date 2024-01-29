@@ -1,14 +1,11 @@
-#include "main.h"
 #include "CalculateThread.h"
-#include "cmsis_os.h"
 #include "RM_remote.h"
 #include "Motor.h"
 
+#include "main.h"
+#include "cmsis_os.h"
+
 #include <string.h>
-
-
-//DJI_Motor_t *my_motor;
-//DM_Motor_t *dm_motor;
 
 Motor_t *my_motor;
 Motor_t *dm_motor;
@@ -17,6 +14,7 @@ Motor_t *dm_motor;
 //Speed_Controller_t *my_controller;
 //PID_Init_Config_s my_pid;
 Position_Controller_t *my_controller;
+Position_Controller_t *dm_controller;
 cascade_PID_Init_Config_s my_pid;
 RM_Remote_t *my_remote;
 
@@ -38,7 +36,7 @@ void CalculateThread(void const * argument)
 //	my_pid.Kd = 0;
 //	my_pid.MaxOut = 0x7fff;
 //	my_pid.Improve = PID_IMPROVE_NONE;
-//	my_controller = speedControllerInit(&my_pid);]
+//	my_controller = speedControllerInit(&my_pid);
 	memset(&my_pid,0,sizeof(cascade_PID_Init_Config_s));
 	my_pid.out_pid_config.Kp = 20;
 	my_pid.out_pid_config.Ki = 0;
@@ -51,7 +49,8 @@ void CalculateThread(void const * argument)
 	my_pid.in_pid_config.MaxOut = 0x7fff;
 	my_pid.in_pid_config.Improve = PID_IMPROVE_NONE;
 
-	my_controller = positionControllerInit(&my_pid);
+	my_controller = positionControllerInit(&my_pid,&my_motor->command_interfaces.angle);
+	
 	
 //	DM_Motor_Register_t dm_motor_reg;
 	memset(&motor_reg,0,sizeof(motor_reg));
@@ -70,19 +69,36 @@ void CalculateThread(void const * argument)
 	
 	dm_motor = motorAdd(&motor_reg);
 	
+	memset(&my_pid,0,sizeof(cascade_PID_Init_Config_s));
+	my_pid.out_pid_config.Kp = 20;
+	my_pid.out_pid_config.Ki = 0;
+	my_pid.out_pid_config.Kd = 0;
+	my_pid.out_pid_config.MaxOut = 0x7fff;
+	my_pid.out_pid_config.Improve = PID_IMPROVE_NONE;
+	my_pid.in_pid_config.Kp = 0.001;
+	my_pid.in_pid_config.Ki = 0;
+	my_pid.in_pid_config.Kd = 0;
+	my_pid.in_pid_config.MaxOut = 0x7fff;
+	my_pid.in_pid_config.Improve = PID_IMPROVE_NONE;
+
+	dm_controller = positionControllerInit(&my_pid,&dm_motor->state_interfaces.angle);
+	
 	my_remote = rmRemoteAdd(&huart3);
 	while(1)
 	{
 		// djiMotor_SwitchRing(my_motor,my_controller);
-		my_motor->command_interfaces.angle += my_remote->state_interfaces.rc.ch[0]/660.0;
-		djiMotorPositionControl(my_motor,my_controller);
-		my_motor->command_interfaces.speed_rpm = my_remote->state_interfaces.rc.ch[0];
+		dm_motor->command_interfaces.angle += my_remote->state_interfaces.rc.ch[0]/660.0;
+		motorPositionControl(dm_motor,dm_controller);
+//		my_motor->command_interfaces.speed_rpm = my_remote->state_interfaces.rc.ch[0];
 //		my_motor->command_interfaces.command=2000;
 //		djiMotorSpeedControl(my_motor,my_controller);
-
 		
-		djiMotorSendMessage();
-		dmMotorSendMessage(dm_motor->motor.dm);
+//		motorPositionControl(dm_motor,dm_controller);
+		
+//		motor_SwitchRing(dm_motor,dm_controller);
+		
+		motorSendAll(DM_MOTOR_MASK|DJI_MOTOR_MASK);
+		
 		osDelay(1);
 	}
 

@@ -39,10 +39,6 @@ typedef struct{
 }DJI_Motor_Info_t;
 
 typedef struct{
-    int16_t speed_rpm;
-    fp32 angle;
-    int16_t current;
-    int16_t voltage;
     int16_t command;
 }DJI_Command_t;
 
@@ -68,4 +64,5 @@ DJI_Motor_t *djiMotorAdd(DJI_Motor_Register_t *reg);
 void djiMotorDelete(DJI_Motor_t *motor);
 void djiMotorInfoUpdate(DJI_Motor_t *motor,uint8_t *data);
 Return_t djiMotorSendMessage();
+
 #endif // !DJIMOTOR_H__

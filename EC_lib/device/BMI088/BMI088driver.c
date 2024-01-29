@@ -3,6 +3,10 @@
 #include "BMI088Middleware.h"
 
 
+static BMI088_t *bmi088_instance;
+static uint8_t txdata[6];
+static uint8_t rxdata[6];
+
 fp32 BMI088_ACCEL_SEN = BMI088_ACCEL_3G_SEN;
 fp32 BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
 
@@ -10,53 +14,66 @@ fp32 BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
 
 #if defined(BMI088_USE_SPI)
 
-#define BMI088_accel_write_single_reg(reg, data) \
-    {                                            \
-        BMI088_ACCEL_NS_L();                     \
-        BMI088_write_single_reg((reg), (data));  \
-        BMI088_ACCEL_NS_H();                     \
+#define BMI088_accel_write_single_reg(reg, data) 				\
+    {                                            				\
+		txdata[0]=reg; txdata[1]=data;							\
+		spiSetMode(bmi088_instance->accel_spi,SPI_BLOCK_MODE);	\
+		spiTransmit(bmi088_instance->accel_spi,txdata,2);		\
     }
-#define BMI088_accel_read_single_reg(reg, data) \
-    {                                           \
-        BMI088_ACCEL_NS_L();                    \
-        BMI088_read_write_byte((reg) | 0x80);   \
-        BMI088_read_write_byte(0x55);           \
-        (data) = BMI088_read_write_byte(0x55);  \
-        BMI088_ACCEL_NS_H();                    \
+#define BMI088_accel_read_single_reg(reg, data)					\
+    {                                           				\
+		txdata[0]=0x80 | reg; txdata[1]=0x55;					\
+		spiSetMode(bmi088_instance->accel_spi,SPI_BLOCK_MODE);	\
+		spiTransRecv(bmi088_instance->accel_spi,rxdata,txdata,2);\
+        (data) = rxdata[2];  									\
     }
 //#define BMI088_accel_write_muli_reg( reg,  data, len) { BMI088_ACCEL_NS_L(); BMI088_write_muli_reg(reg, data, len); BMI088_ACCEL_NS_H(); }
-#define BMI088_accel_read_muli_reg(reg, data, len) \
-    {                                              \
-        BMI088_ACCEL_NS_L();                       \
-        BMI088_read_write_byte((reg) | 0x80);      \
-        BMI088_read_muli_reg(reg, data, len);      \
-        BMI088_ACCEL_NS_H();                       \
+#define BMI088_accel_read_muli_reg(reg, data, len) 				\
+    {                                              				\
+		txdata[0]=0x80 | reg;									\
+		spiTransmit(bmi088_instance->accel_spi,txdata,1);		\
+        spiReceive(bmi088_instance->accel_spi,data,len);		\
     }
 
-#define BMI088_gyro_write_single_reg(reg, data) \
-    {                                           \
-        BMI088_GYRO_NS_L();                     \
-        BMI088_write_single_reg((reg), (data)); \
-        BMI088_GYRO_NS_H();                     \
+
+
+#define BMI088_gyro_write_single_reg(reg, data) 				\
+    {                                           				\
+		txdata[0]=reg; txdata[1]=data;							\
+		spiSetMode(bmi088_instance->gyro_spi,SPI_BLOCK_MODE);	\
+		spiTransmit(bmi088_instance->gyro_spi,txdata,2);		\
     }
-#define BMI088_gyro_read_single_reg(reg, data)  \
-    {                                           \
-        BMI088_GYRO_NS_L();                     \
-        BMI088_read_single_reg((reg), &(data)); \
-        BMI088_GYRO_NS_H();                     \
+#define BMI088_gyro_read_single_reg(reg, data)  				\
+    {                                           				\
+		txdata[0]=0x80 | reg; txdata[1]=0x55;					\
+		spiSetMode(bmi088_instance->gyro_spi,SPI_BLOCK_MODE);	\
+		spiTransRecv(bmi088_instance->gyro_spi,rxdata,txdata,2);\
+        (data) = rxdata[2];  									\
     }
 //#define BMI088_gyro_write_muli_reg( reg,  data, len) { BMI088_GYRO_NS_L(); BMI088_write_muli_reg( ( reg ), ( data ), ( len ) ); BMI088_GYRO_NS_H(); }
-#define BMI088_gyro_read_muli_reg(reg, data, len)   \
-    {                                               \
-        BMI088_GYRO_NS_L();                         \
-        BMI088_read_muli_reg((reg), (data), (len)); \
-        BMI088_GYRO_NS_H();                         \
+#define BMI088_gyro_read_muli_reg(reg, data, len)   		\
+    {                                               		\
+		txdata[0]=0x80 | reg;								\
+		spiTransmit(bmi088_instance->gyro_spi,txdata,1);	\
+        spiReceive(bmi088_instance->gyro_spi,data,len);		\
     }
 
 static void BMI088_write_single_reg(uint8_t reg, uint8_t data);
 static void BMI088_read_single_reg(uint8_t reg, uint8_t *return_data);
 //static void BMI088_write_muli_reg(uint8_t reg, uint8_t* buf, uint8_t len );
 static void BMI088_read_muli_reg(uint8_t reg, uint8_t *buf, uint8_t len);
+	
+void bmi088AccelExtiCallback(){
+    if(GPIO_Pin == INT1_Accel_Pin)
+    {
+        accel_update_flag |= 1 << IMU_DR_SHFITS;
+        accel_temp_update_flag |= 1 << IMU_DR_SHFITS;
+        if(imu_start_dma_flag)
+        {
+            imu_cmd_spi_dma();
+        }
+    }
+}
 
 #elif defined(BMI088_USE_IIC)
 
@@ -85,12 +102,39 @@ static uint8_t write_BMI088_gyro_reg_data_error[BMI088_WRITE_GYRO_REG_NUM][3] =
 
 };
 
-uint8_t BMI088_init(void)
+static void bmi088AccelCallback(SPI_Device_t* device){
+	
+}
+
+uint8_t BMI088_init(BMI088_Register_t *reg)
 {
     uint8_t error = BMI088_NO_ERROR;
     // GPIO and SPI  Init .
     BMI088_GPIO_init();
     BMI088_com_init();
+	
+	SPI_Register_t spi_reg;
+	PWM_Register_t pwm_reg;
+	
+	spi_reg.spi_handle		= reg->spi_handle;
+	spi_reg.spi_work_mode 	= SPI_BLOCK_MODE;
+	spi_reg.GPIOx			= reg->accel_GPIOx;
+	spi_reg.cs_pin			= reg->accel_cs_pin;
+	spi_reg.callback		= bmi088AccelCallback;
+	bmi088_instance->accel_spi = spiRegister(&spi_reg);
+	
+	spi_reg.spi_work_mode 	= SPI_BLOCK_MODE;
+	spi_reg.GPIOx			= reg->gyro_GPIOx;
+	spi_reg.cs_pin			= reg->gyro_cs_pin;
+	spi_reg.spi_handle		= reg->spi_handle;
+	bmi088_instance->gyro_spi = spiRegister(&spi_reg);
+	
+	pwm_reg.htim 		= reg->tim_handle;
+	pwm_reg.channel		= reg->channel;
+	pwm_reg.period		= 1e6;
+	pwm_reg.dutyratio	= 1.0f;
+	bmi088_instance->pwm_info = pwmRegister(&pwm_reg);
+	
 
     // self test pass and init
     if (bmi088_accel_self_test() != BMI088_NO_ERROR)
@@ -110,7 +154,13 @@ uint8_t BMI088_init(void)
     {
         error |= bmi088_gyro_init();
     }
-
+	
+	if(error == BMI088_NO_ERROR){
+		spiSetMode(bmi088_instance->accel_spi,SPI_DMA_MODE);
+		spiSetMode(bmi088_instance->gyro_spi,SPI_DMA_MODE);
+		spiReceive(bmi088_instance->accel_spi,)
+	}
+	
     return error;
 }
 
@@ -518,6 +568,7 @@ void get_BMI088_accel(fp32 accel[3])
 
 #if defined(BMI088_USE_SPI)
 
+
 static void BMI088_write_single_reg(uint8_t reg, uint8_t data)
 {
     BMI088_read_write_byte(reg);
@@ -555,6 +606,9 @@ static void BMI088_read_muli_reg(uint8_t reg, uint8_t *buf, uint8_t len)
         len--;
     }
 }
+
+
+
 #elif defined(BMI088_USE_IIC)
 
 #endif

@@ -176,3 +176,4 @@ void djiMotorInfoUpdate(DJI_Motor_t *motor,uint8_t *data)
     motor->state_interfaces.temperate = (data)[6];
 }
 
+

@@ -34,6 +34,15 @@ enum{
 #define RETURN_SUCCESS  OK
 #define bool_t          Bool_t
 
+typedef struct{
+    fp32    YawAngle;
+    fp32    PitchAngle;
+    fp32    RollAngle;
+    fp32    YawSpeed;
+    fp32    PitchSpeed;
+    fp32    RollSpeed;
+} EulerSystemMeasure_t;
+
 #endif
 
 

@@ -2,7 +2,8 @@
 #define BMI088DRIVER_H
 
 #include "struct_typedef.h"
-#include "main.h"
+#include "bsp_spi.h"
+#include "bsp_pwm.h"
 
 #define BMI088_TEMP_FACTOR 0.125f
 #define BMI088_TEMP_OFFSET 23.0f
@@ -86,11 +87,53 @@ enum
     BMI088_NO_SENSOR                    = 0xFF,
 };
 
+typedef struct{
+	volatile uint8_t gyro_update_flag;
+	volatile uint8_t accel_update_flag;
+	volatile uint8_t accel_temp_update_flag;
+	volatile uint8_t mag_update_flag;
+	volatile uint8_t imu_start_dma_flag;
+}BMI088_State;
+
+typedef struct BMI088_{
+	
+	uint8_t statu;  //online 0  / offline 1 
+	bmi088_raw_data_t raw_data;
+	bmi088_real_data_t data;
+	BMI088_State state;
+	
+    GPIO_TypeDef *accel_INT1_GPIOx;           // accel中断对应的GPIO
+    uint16_t accel_INT1_pin;               // accel中断对应的引脚号
+    GPIO_TypeDef *gyro_INT1_GPIOx;           // gyro中断对应的GPIO
+    uint16_t gyro_INT1_pin;               // gyro中断对应的引脚号
+	
+    SPI_Device_t *accel_spi;
+    SPI_Device_t *gyro_spi;
+	PWM_Device_t *pwm_info;
+	
+}BMI088_t;
+
+typedef struct{
+	
+    SPI_HandleTypeDef *spi_handle; // SPI外设handle
+    GPIO_TypeDef *accel_GPIOx;           // accel片选信号对应的GPIO
+    uint16_t accel_cs_pin;               // accel片选信号对应的引脚号
+    GPIO_TypeDef *gyro_GPIOx;           // gyro片选信号对应的GPIO
+    uint16_t gyro_cs_pin;               // gyro片选信号对应的引脚号
+	
+    GPIO_TypeDef *accel_INT1_GPIOx;           // accel中断对应的GPIO
+    uint16_t accel_INT1_pin;               // accel中断对应的引脚号
+    GPIO_TypeDef *gyro_INT1_GPIOx;           // gyro中断对应的GPIO
+    uint16_t gyro_INT1_pin;               // gyro中断对应的引脚号
+	
+	
+    TIM_HandleTypeDef *tim_handle;                 // TIM句柄
+    uint32_t channel;                        // 通道
+	
+}BMI088_Register_t;
 
 
-
-
-extern uint8_t BMI088_init(void);
+extern uint8_t BMI088_init(BMI088_Register_t *reg);
 extern bool_t bmi088_accel_self_test(void);
 extern bool_t bmi088_gyro_self_test(void);
 extern bool_t bmi088_accel_init(void);
