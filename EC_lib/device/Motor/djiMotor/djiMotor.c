@@ -31,7 +31,12 @@ static void djiMotorCallback(Can_Device_t *instance)
         if(instance == dji_motor[i]->can_info)
         {
             djiMotorInfoUpdate(dji_motor[i],instance->rx_buff);
-            return;
+			
+			if(dji_motor[i]->motorCallback!=NULL){
+				dji_motor[i]->motorCallback(dji_motor[i]);
+			}
+			
+            break;
         }
     }     
 }
@@ -93,12 +98,15 @@ Return_t djiMotorSendMessage()
 {   
 	
 	int16_t can_send_num[2][3]={{-1,-1,-1},{-1,-1,-1}};
+	Return_t ret=RETURN_SUCCESS;
 	
     for(uint8_t i =0;i<id_cnt;i++)
     {
         if(dji_motor[i]->statu == OFFLINE)
         {
             dji_motor[i]->command_interfaces.command = 0;
+			ret=RETURN_ERROR;
+			continue;
         }
 
 
@@ -158,62 +166,15 @@ Return_t djiMotorSendMessage()
 		canSendMessage(dji_motor[can_send_num[1][2]]->can_info,MotorSendBuffer_can2+16);
 	}
 	
-    return RETURN_SUCCESS;
+    return ret;
 }
 
 void djiMotorInfoUpdate(DJI_Motor_t *motor,uint8_t *data)
 {
-    motor->state_interfaces.last_ecd = motor->state_interfaces.ecd;
     motor->state_interfaces.ecd = (uint16_t)((data)[0] << 8 | (data)[1]);
     motor->state_interfaces.speed_rpm = (uint16_t)((data)[2] << 8 | (data)[3]);
     motor->state_interfaces.given_current = (uint16_t)((data)[4] << 8 | (data)[5]);
     motor->state_interfaces.temperate = (data)[6];
-    motor->state_interfaces.angle = motor->state_interfaces.ecd/ 8192.0f * 360.0f - 180.0f;
 }
 
-void djiMotorSpeedControl(DJI_Motor_t *motor,Speed_Controller_t *controller)
-{
-    motor->command_interfaces.command =  (int16_t)PIDCalculate(controller->pid, motor->state_interfaces.speed_rpm,motor->command_interfaces.speed_rpm);
-}
 
-Speed_Controller_t *speedControllerInit(PID_Init_Config_s *config)
-{
-    Speed_Controller_t *controller = (Speed_Controller_t *)malloc(sizeof(Speed_Controller_t));
-    memset(controller, 0, sizeof(Speed_Controller_t));
-    PIDInstance *instance = (PIDInstance *)malloc(sizeof(PIDInstance));
-    PIDInit(instance, config);
-    controller->pid = instance;
-
-/*
-    PIDInit(controller->pid, config);
-    这样写为什么不可以
-*/
-
-    return controller;
-}
-Position_Controller_t *positionControllerInit(cascade_PID_Init_Config_s *config,float *out_fdb)
-{
-    Position_Controller_t *controller = (Position_Controller_t *)malloc(sizeof(Position_Controller_t));
-    memset(controller, 0, sizeof(Position_Controller_t));
-    cascadePIDInstacne *instance = (cascadePIDInstacne *)malloc(sizeof(cascadePIDInstacne));
-    cascadePIDInit(instance,config);
-    controller->out_fdb_src = out_fdb;
-    controller->cascade_pid = instance;
-    return controller;
-}
-
-void djiMotorPositionControl(DJI_Motor_t *motor,Position_Controller_t *controller)
-{
-    motor->command_interfaces.angle = loop_float_constrain(motor->command_interfaces.angle,*controller->out_fdb_src - 180.f ,*controller->out_fdb_src + 180.f);
-    motor->command_interfaces.command = cascadePIDCalculate(controller->cascade_pid,*controller->out_fdb_src,motor->state_interfaces.speed_rpm,motor->command_interfaces.angle);
-
-}
-void djiMotor_SwitchRing(DJI_Motor_t *motor,Position_Controller_t *controller)
-{   
-    if(motor->state_interfaces.angle - motor->command_interfaces.angle > 10.0f)
-        motor->command_interfaces.angle += 20.0f;
-    else if (motor->state_interfaces.angle - motor->command_interfaces.angle < -10.0f)
-        motor->command_interfaces.angle -= 20.0f;
-    
-    djiMotorPositionControl(motor,controller);
-}

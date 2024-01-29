@@ -10,9 +10,10 @@
 // 
 //
 //=====================================================================================================
+#include "bsp_usart.h"
+
 #include <string.h>
 #include <stdlib.h>
-#include "bsp_usart.h"
 
 static  Usart_Device_t *usart_device[USART_MX_REGISTER_CNT] = {NULL};
 static uint8_t id_cnt=0; // 全局USART实例索引,每次有新的模块注册会自增
@@ -61,10 +62,6 @@ static void usartStartReceive(Usart_Device_t* instance){
     	//使能DMA串口接收
     	SET_BIT(instance->usart_handle->Instance->CR3, USART_CR3_DMAR);
 
-    	//enalbe idle interrupt
-    	//使能空闲中断
-    	__HAL_UART_ENABLE_IT(instance->usart_handle, UART_IT_IDLE);
-
     	//disable DMA
     	//失效DMA          
     	__HAL_DMA_DISABLE(instance->usart_handle->hdmarx);
@@ -87,11 +84,17 @@ static void usartStartReceive(Usart_Device_t* instance){
 		//enable double memory buffer
 		//使能双缓冲区
 		SET_BIT(instance->usart_handle->hdmarx->Instance->CR, DMA_SxCR_DBM);
+	
+    	//enalbe idle interrupt
+    	//使能空闲中断
+    	__HAL_UART_ENABLE_IT(instance->usart_handle, UART_IT_IDLE);
+	
 		//enable DMA
     	//使能DMA
 		instance->usart_handle->ReceptionType = HAL_UART_RECEPTION_TOIDLE;
 		instance->usart_handle->RxXferSize = USART_RXBUFF_LIMIT/2;
     	__HAL_DMA_ENABLE(instance->usart_handle->hdmarx);
+		
 		
 	}
 	else{

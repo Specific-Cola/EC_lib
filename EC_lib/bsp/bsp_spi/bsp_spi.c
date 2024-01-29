@@ -11,14 +11,14 @@
 //
 //=====================================================================================================
 #include "bsp_spi.h"
+
 #include <string.h>
-#include "stdlib.h"
-#include "main.h"
+#include <stdlib.h>
 /* 所有的spi instance保存于此,用于callback时判断中断来源*/
 static SPI_Device_t *spi_instance[SPI_DEVICE_CNT] = {NULL};
 static uint8_t id_cnt = 0; // 配合中断以及初始化
 
-SPI_Device_t *SPIRegister(SPI_Register_t *conf)
+SPI_Device_t *spiRegister(SPI_Register_t *conf)
 {
     if (id_cnt >= SPI_DEVICE_CNT) // 超过最大实例数
         Error_Handler();
@@ -36,7 +36,7 @@ SPI_Device_t *SPIRegister(SPI_Register_t *conf)
     return instance;
 }
 
-void SPITransmit(SPI_Device_t *spi_ins, uint8_t *ptr_data, uint8_t len)
+void spiTransmit(SPI_Device_t *spi_ins, uint8_t *ptr_data, uint8_t len)
 {
     // 拉低片选,开始传输(选中从机)
     HAL_GPIO_WritePin(spi_ins->GPIOx, spi_ins->cs_pin, GPIO_PIN_RESET);

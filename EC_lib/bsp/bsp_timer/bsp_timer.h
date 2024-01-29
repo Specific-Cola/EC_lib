@@ -10,8 +10,8 @@
 // 
 //
 //=====================================================================================================
-#ifndef BSP_TIMER_H
-#define BSP_TIMER_H
+#ifndef BSP_TIMER_H__
+#define BSP_TIMER_H__
 
 #include "struct_typedef.h"
 #include "tim.h"
