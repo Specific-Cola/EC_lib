@@ -1,6 +1,6 @@
 #include "bsp_gpio.h"
-#include "string.h"
-#include "stdlib.h"
+#include <string.h>
+#include <stdlib.h>
 
 static uint8_t idx;
 static GPIOInstance *gpio_instance[GPIO_MX_DEVICE_NUM] = {NULL};

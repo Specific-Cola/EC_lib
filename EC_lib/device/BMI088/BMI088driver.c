@@ -1,15 +1,37 @@
 #include "BMI088driver.h"
 #include "BMI088reg.h"
-#include "BMI088Middleware.h"
-
+#include "cmsis_os.h"
+#include "portmacro.h"
 
 static BMI088_t *bmi088_instance;
 static uint8_t txdata[6];
 static uint8_t rxdata[6];
 
+#define SPI_DMA_GYRO_LENGHT       8
+#define SPI_DMA_ACCEL_LENGHT      9
+#define SPI_DMA_ACCEL_TEMP_LENGHT 4
+
+uint8_t gyro_dma_rx_buf[SPI_DMA_GYRO_LENGHT];
+uint8_t gyro_dma_tx_buf[SPI_DMA_GYRO_LENGHT] = {0x82,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
+
+uint8_t accel_dma_rx_buf[SPI_DMA_ACCEL_LENGHT];
+uint8_t accel_dma_tx_buf[SPI_DMA_ACCEL_LENGHT] = {0x92,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
+
+uint8_t accel_temp_dma_rx_buf[SPI_DMA_ACCEL_TEMP_LENGHT];
+uint8_t accel_temp_dma_tx_buf[SPI_DMA_ACCEL_TEMP_LENGHT] = {0xA2,0xFF,0xFF,0xFF};
+
 fp32 BMI088_ACCEL_SEN = BMI088_ACCEL_3G_SEN;
 fp32 BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
 
+void BMI088_delay_ms(uint16_t ms)
+{
+    osDelay(ms);
+}
+
+void BMI088_delay_us(uint16_t us)
+{
+    delayUs(us);
+}
 
 
 #if defined(BMI088_USE_SPI)
@@ -62,18 +84,6 @@ static void BMI088_write_single_reg(uint8_t reg, uint8_t data);
 static void BMI088_read_single_reg(uint8_t reg, uint8_t *return_data);
 //static void BMI088_write_muli_reg(uint8_t reg, uint8_t* buf, uint8_t len );
 static void BMI088_read_muli_reg(uint8_t reg, uint8_t *buf, uint8_t len);
-	
-void bmi088AccelExtiCallback(){
-    if(GPIO_Pin == INT1_Accel_Pin)
-    {
-        accel_update_flag |= 1 << IMU_DR_SHFITS;
-        accel_temp_update_flag |= 1 << IMU_DR_SHFITS;
-        if(imu_start_dma_flag)
-        {
-            imu_cmd_spi_dma();
-        }
-    }
-}
 
 #elif defined(BMI088_USE_IIC)
 
@@ -102,8 +112,80 @@ static uint8_t write_BMI088_gyro_reg_data_error[BMI088_WRITE_GYRO_REG_NUM][3] =
 
 };
 
-static void bmi088AccelCallback(SPI_Device_t* device){
+static void imu_cmd_spi_dma(void)
+{
+    UBaseType_t uxSavedInterruptStatus;
+    uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
+
+    if((bmi088_instance->state.gyro_update_flag & (1 << IMU_DR_SHFITS)) && (bmi088_instance->gyro_spi->spi_work_mode == SPI_DMA_MODE)\ 
+    && !(bmi088_instance->state.accel_update_flag & (1 << IMU_SPI_SHFITS)) && !(bmi088_instance->state.accel_temp_update_flag & (1 << IMU_SPI_SHFITS)))
+    {
+        bmi088_instance->state.gyro_update_flag &= ~(1 << IMU_DR_SHFITS);
+        bmi088_instance->state.gyro_update_flag |= (1 << IMU_SPI_SHFITS);
+
+        spiTransRecv(bmi088_instance->gyro_spi, gyro_dma_rx_buf, gyro_dma_tx_buf, SPI_DMA_GYRO_LENGHT);
+
+        taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
+        return;
+    }
+
+    if((bmi088_instance->state.accel_update_flag & (1 << IMU_DR_SHFITS)) && (bmi088_instance->accel_spi->spi_work_mode == SPI_DMA_MODE)\
+    && !(bmi088_instance->state.gyro_update_flag & (1 << IMU_SPI_SHFITS)) && !(bmi088_instance->state.accel_temp_update_flag & (1 << IMU_SPI_SHFITS)))
+    {
+        bmi088_instance->state.accel_update_flag &= ~(1 << IMU_DR_SHFITS);
+        bmi088_instance->state.accel_update_flag |= (1 << IMU_SPI_SHFITS);
+
+        spiTransRecv(bmi088_instance->accel_spi, accel_dma_rx_buf, accel_dma_tx_buf, SPI_DMA_ACCEL_LENGHT);
+
+        taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
+        return;
+    }
+		
+    if((bmi088_instance->state.accel_temp_update_flag & (1 << IMU_DR_SHFITS)) && (bmi088_instance->accel_spi->spi_work_mode == SPI_DMA_MODE)\
+    && !(bmi088_instance->state.gyro_update_flag & (1 << IMU_SPI_SHFITS)) && !(bmi088_instance->state.accel_update_flag & (1 << IMU_SPI_SHFITS)))
+    {
+        bmi088_instance->state.accel_temp_update_flag &= ~(1 << IMU_DR_SHFITS);
+        bmi088_instance->state.accel_temp_update_flag |= (1 << IMU_SPI_SHFITS);
+
+        spiTransRecv(bmi088_instance->accel_spi, accel_temp_dma_rx_buf, accel_temp_dma_tx_buf, SPI_DMA_ACCEL_TEMP_LENGHT);
+
+        taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
+        return;
+    }
+    taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
+}
+
+static void bmi088AccelSpiCallback(SPI_Device_t* device){
+	if(bmi088_instance->accel_spi == device){
+        
+    }
+}
+
+static void bmi088AccelExtiCallback(GPIOInstance* instance){
+	if(bmi088_instance->accel_exti == instance)
+    {
+        bmi088_instance->state.accel_update_flag |= 1 << IMU_DR_SHFITS;
+        bmi088_instance->state.accel_temp_update_flag |= 1 << IMU_DR_SHFITS;
+        if(bmi088_instance->state.imu_start_dma_flag)
+        {
+            imu_cmd_spi_dma();
+        }
+    }
+}
+
+static void bmi088GyroSpiCallback(SPI_Device_t* device){
 	
+}
+
+static void bmi088GyroExtiCallback(GPIOInstance* instance){
+	if(bmi088_instance->gyro_exti == instance)
+    {
+        bmi088_instance->state.gyro_update_flag |= 1 << IMU_DR_SHFITS;
+        if(bmi088_instance->state.imu_start_dma_flag)
+        {
+            imu_cmd_spi_dma();
+        }
+    }
 }
 
 uint8_t BMI088_init(BMI088_Register_t *reg)
@@ -115,27 +197,32 @@ uint8_t BMI088_init(BMI088_Register_t *reg)
 	
 	SPI_Register_t spi_reg;
 	PWM_Register_t pwm_reg;
+    GPIO_Init_Config_s gpio_reg;
 	
 	spi_reg.spi_handle		= reg->spi_handle;
 	spi_reg.spi_work_mode 	= SPI_BLOCK_MODE;
 	spi_reg.GPIOx			= reg->accel_GPIOx;
 	spi_reg.cs_pin			= reg->accel_cs_pin;
-	spi_reg.callback		= bmi088AccelCallback;
+	spi_reg.callback		= bmi088AccelSpiCallback;
 	bmi088_instance->accel_spi = spiRegister(&spi_reg);
 	
 	spi_reg.spi_work_mode 	= SPI_BLOCK_MODE;
 	spi_reg.GPIOx			= reg->gyro_GPIOx;
 	spi_reg.cs_pin			= reg->gyro_cs_pin;
 	spi_reg.spi_handle		= reg->spi_handle;
+	spi_reg.callback		= bmi088GyroSpiCallback;
 	bmi088_instance->gyro_spi = spiRegister(&spi_reg);
 	
+    gpio_reg.GPIOx                  = reg
+    gpio_reg.exti_mode              = GPIO_EXTI_MODE_FALLING;
+    gpio_reg.gpio_model_callback    = bmi088AccelExtiCallback;
+
 	pwm_reg.htim 		= reg->tim_handle;
 	pwm_reg.channel		= reg->channel;
 	pwm_reg.period		= 1e6;
 	pwm_reg.dutyratio	= 1.0f;
 	bmi088_instance->pwm_info = pwmRegister(&pwm_reg);
 	
-
     // self test pass and init
     if (bmi088_accel_self_test() != BMI088_NO_ERROR)
     {
@@ -158,7 +245,7 @@ uint8_t BMI088_init(BMI088_Register_t *reg)
 	if(error == BMI088_NO_ERROR){
 		spiSetMode(bmi088_instance->accel_spi,SPI_DMA_MODE);
 		spiSetMode(bmi088_instance->gyro_spi,SPI_DMA_MODE);
-		spiReceive(bmi088_instance->accel_spi,)
+		spiReceive(bmi088_instance->accel_spi,bmi088_instance->);
 	}
 	
     return error;

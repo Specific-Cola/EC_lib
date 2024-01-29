@@ -1,5 +1,5 @@
 #include "gpio.h"
-#include "stdint.h"
+#include "struct_typedef.h"
 
 #define GPIO_MX_DEVICE_NUM 10
 
