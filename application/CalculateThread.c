@@ -37,7 +37,7 @@ void CalculateThread(void const * argument)
 	
 	
 //	buzzerOnce(my_buzzer);
-	buzzerSeveralTimes(my_buzzer,5,500);
+//	buzzerSeveralTimes(my_buzzer,5,500);
 //	buzzerSetMusicScore(my_buzzer,little_star_score,48,LITTLE_STAR_BPM,LITTLE_STAR_STANDARD);
 //	buzzerSetMusicScore(my_buzzer,shengdanxing_score,sizeof(shengdanxing_score)/4,SHENGDANXING_BPM,SHENGDANXING_STANDARD);
 	

@@ -5,6 +5,9 @@
 #include "bsp_spi.h"
 #include "bsp_pwm.h"
 #include "bsp_gpio.h"
+#include "bsp_delay.h"
+
+#define BMI088_USE_SPI 1
 
 #define BMI088_TEMP_FACTOR 0.125f
 #define BMI088_TEMP_OFFSET 23.0f
@@ -135,8 +138,8 @@ typedef struct{
 	
 }BMI088_Register_t;
 
-
-extern uint8_t BMI088_init(BMI088_Register_t *reg);
+extern BMI088_t *bmi088Register(BMI088_Register_t *reg);
+extern uint8_t BMI088_init();
 extern bool_t bmi088_accel_self_test(void);
 extern bool_t bmi088_gyro_self_test(void);
 extern bool_t bmi088_accel_init(void);
