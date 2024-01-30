@@ -100,7 +100,7 @@ Buzzer_t *buzzerInit(Buzzer_Register_t *reg){
 	pwm_reg.callback	= NULL;
 	instance->pwm = pwmRegister(&pwm_reg);
 	instance->volume = 0.5;
-	
+	pwmOnDeactivate(instance->pwm);
 	buzzer_instance[id_cnt++]=instance;
 	return instance;
 }
