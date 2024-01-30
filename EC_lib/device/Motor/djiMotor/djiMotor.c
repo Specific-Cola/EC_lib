@@ -88,6 +88,7 @@ DJI_Motor_t *djiMotorAdd(DJI_Motor_Register_t *reg)//使用can instance注册电
     
     motor->motor_type = reg->motor_type;
     motor->can_info = canDeviceRegister(&can_reg);
+    
     dji_motor[id_cnt++] = motor;
 
     return motor;   

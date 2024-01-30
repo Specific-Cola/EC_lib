@@ -17,59 +17,39 @@
 
 
 
-//#define IMU_temp_PWM(pwm)  imu_pwm_set(pwm)                    //pwm¸ø¶¨
+#define IMU_temp_PWM(pwm)  imu_pwm_set(pwm)                    //pwmï¿½ï¿½ï¿½ï¿½
 
 
-///**
-//  * @brief          control the temperature of bmi088
-//  * @param[in]      temp: the temperature of bmi088
-//  * @retval         none
-//  */
-///**
-//  * @brief          ¿ØÖÆbmi088µÄÎÂ¶È
-//  * @param[in]      temp:bmi088µÄÎÂ¶È
-//  * @retval         none
-//  */
-//static void imu_temp_control(fp32 temp);
+/**
+  * @brief          control the temperature of bmi088
+  * @param[in]      temp: the temperature of bmi088
+  * @retval         none
+  */
+/**
+  * @brief          ï¿½ï¿½ï¿½ï¿½bmi088ï¿½ï¿½ï¿½Â¶ï¿½
+  * @param[in]      temp:bmi088ï¿½ï¿½ï¿½Â¶ï¿½
+  * @retval         none
+  */
+static void imu_temp_control(fp32 temp);
 
-///**
-//  * @brief          open the SPI DMA accord to the value of imu_update_flag
-//  * @param[in]      none
-//  * @retval         none
-//  */
-///**
-//  * @brief          ¸ù¾Ýimu_update_flagµÄÖµ¿ªÆôSPI DMA
-//  * @param[in]      temp:bmi088µÄÎÂ¶È
-//  * @retval         none
-//  */
-//static void imu_cmd_spi_dma(void);
+/**
+  * @brief          open the SPI DMA accord to the value of imu_update_flag
+  * @param[in]      none
+  * @retval         none
+  */
+/**
+  * @brief          ï¿½ï¿½ï¿½ï¿½imu_update_flagï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½SPI DMA
+  * @param[in]      temp:bmi088ï¿½ï¿½ï¿½Â¶ï¿½
+  * @retval         none
+  */
+static void imu_cmd_spi_dma(void);
 
 
 //void AHRS_init(fp32 quat[4], fp32 accel[3]);
 //void AHRS_update(fp32 quat[4], fp32 time, fp32 gyro[3], fp32 accel[3]);
 //void get_angle(fp32 quat[4], fp32 *yaw, fp32 *pitch, fp32 *roll);
 
-//extern SPI_HandleTypeDef hspi1;
-
-//uint8_t gyro_dma_rx_buf[SPI_DMA_GYRO_LENGHT];
-//uint8_t gyro_dma_tx_buf[SPI_DMA_GYRO_LENGHT] = {0x82,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
-
-//uint8_t accel_dma_rx_buf[SPI_DMA_ACCEL_LENGHT];
-//uint8_t accel_dma_tx_buf[SPI_DMA_ACCEL_LENGHT] = {0x92,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
-
-//uint8_t accel_temp_dma_rx_buf[SPI_DMA_ACCEL_TEMP_LENGHT];
-//uint8_t accel_temp_dma_tx_buf[SPI_DMA_ACCEL_TEMP_LENGHT] = {0xA2,0xFF,0xFF,0xFF};
-
-
-
-////volatile uint8_t gyro_update_flag = 0;
-////volatile uint8_t accel_update_flag = 0;
-////volatile uint8_t accel_temp_update_flag = 0;
-////volatile uint8_t mag_update_flag = 0;
-////volatile uint8_t imu_start_dma_flag = 0;
-
-
-//bmi088_real_data_t bmi088_real_data;
+bmi088_real_data_t bmi088_real_data;
 
 
 //static uint8_t first_temperate;
@@ -77,9 +57,9 @@
 //static pid_type_def imu_temp_pid;
 
 
-//fp32 INS_quat[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-//fp32 INS_angle[3] = {0.0f, 0.0f, 0.0f};      //euler angle, unit rad.Å·À­½Ç µ¥Î» rad
-//fp32 INS_palstance[3] = {0.0f, 0.0f, 0.0f};
+fp32 INS_quat[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+fp32 INS_angle[3] = {0.0f, 0.0f, 0.0f};      //euler angle, unit rad.Å·ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Î» rad
+fp32 INS_palstance[3] = {0.0f, 0.0f, 0.0f};
 
 //uint32_t IMU_Timer;
 
@@ -89,24 +69,24 @@
 //void GetCurrentQuaternion(fp32 q[4]);
 
 
-///**
-//  * @brief          imu task, init bmi088, ist8310, calculate the euler angle
-//  * @param[in]      pvParameters: NULL
-//  * @retval         none
-//  */
-///**
-//  * @brief          imuÈÎÎñ, ³õÊ¼»¯ bmi088, ist8310, ¼ÆËãÅ·À­½Ç
-//  * @param[in]      pvParameters: NULL
-//  * @retval         none
-//  */
-//void AttitudeThread(void const *pvParameters)
-//{
-//    //wait a time
-//    osDelay(INS_TASK_INIT_TIME);
-//    while(BMI088_init())
-//    {
-//        osDelay(100);
-//    }
+/**
+  * @brief          imu task, init bmi088, ist8310, calculate the euler angle
+  * @param[in]      pvParameters: NULL
+  * @retval         none
+  */
+/**
+  * @brief          imuï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½Ê¼ï¿½ï¿½ bmi088, ist8310, ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½ï¿½ï¿½
+  * @param[in]      pvParameters: NULL
+  * @retval         none
+  */
+void AttitudeThread(void const *pvParameters)
+{
+    //wait a time
+    osDelay(INS_TASK_INIT_TIME);
+    while(BMI088_init())
+    {
+        osDelay(100);
+    }
 
 //    BMI088_read(bmi088_real_data.gyro, bmi088_real_data.accel, &bmi088_real_data.temp);
 
@@ -125,19 +105,19 @@
 
 //    SPI1_DMA_init((uint32_t)gyro_dma_tx_buf, (uint32_t)gyro_dma_rx_buf, SPI_DMA_GYRO_LENGHT);
 
-//    imu_start_dma_flag = 1;//±ØÐëÒª³õÊ¼»¯DMAÖ®ºó²ÅÄÜÈ¥Ê¹ÄÜDMA£¬·ñÔò»á³öÏÖÖ»½øÒ»´ÎDMAÖÐ¶ÏÇé¿ö£¬´Ë´¦ÁôÒâ
+    imu_start_dma_flag = 1;//ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½Ê¼ï¿½ï¿½DMAÖ®ï¿½ï¿½ï¿½ï¿½ï¿½È¥Ê¹ï¿½ï¿½DMAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½Ò»ï¿½ï¿½DMAï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë´ï¿½ï¿½ï¿½ï¿½ï¿½
 
-//    while (1)
-//    {
-//        AHRS_update(INS_quat, 0.001f, bmi088_real_data.gyro, bmi088_real_data.accel);
-//        get_angle(INS_quat, INS_angle + INS_YAW_ADDRESS_OFFSET, INS_angle + INS_PITCH_ADDRESS_OFFSET, INS_angle + INS_ROLL_ADDRESS_OFFSET);
-////        IMU_Timer = GetSystemTimer();
-////        CanSendMessage(&COMMUNICATE_CANPORT, IMU_PACKET_TIME_ID, 4, (uint8_t *)&IMU_Timer);
-////        CanSendMessage(&COMMUNICATE_CANPORT, IMU_PACKET_DATA0_ID, 8, (uint8_t *)&INS_quat[0]);
-////        CanSendMessage(&COMMUNICATE_CANPORT, IMU_PACKET_DATA1_ID, 8, (uint8_t *)&INS_quat[2]);
-//        osDelay(1);//½âËãÆµÂÊÖ»ÐèÒª¸ßÓÚÔÆÌ¨ÈÎÎñÆµÂÊ¼´¿É
-//    }
-//}
+    while (1)
+    {
+        AHRS_update(INS_quat, 0.001f, bmi088_real_data.gyro, bmi088_real_data.accel);
+        get_angle(INS_quat, INS_angle + INS_YAW_ADDRESS_OFFSET, INS_angle + INS_PITCH_ADDRESS_OFFSET, INS_angle + INS_ROLL_ADDRESS_OFFSET);
+//        IMU_Timer = GetSystemTimer();
+//        CanSendMessage(&COMMUNICATE_CANPORT, IMU_PACKET_TIME_ID, 4, (uint8_t *)&IMU_Timer);
+//        CanSendMessage(&COMMUNICATE_CANPORT, IMU_PACKET_DATA0_ID, 8, (uint8_t *)&INS_quat[0]);
+//        CanSendMessage(&COMMUNICATE_CANPORT, IMU_PACKET_DATA1_ID, 8, (uint8_t *)&INS_quat[2]);
+        osDelay(1);//ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½Ö»ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½ï¿½ï¿½Æµï¿½Ê¼ï¿½ï¿½ï¿½
+    }
+}
 
 //void AHRS_init(fp32 quat[4], fp32 accel[3])
 //{
@@ -308,154 +288,86 @@
 
 
 
-///**
-//  * @brief          control the temperature of bmi088
-//  * @param[in]      temp: the temperature of bmi088
-//  * @retval         none
-//  */
-///**
-//  * @brief          ¿ØÖÆbmi088µÄÎÂ¶È
-//  * @param[in]      temp:bmi088µÄÎÂ¶È
-//  * @retval         none
-//  */
-//static void imu_temp_control(fp32 temp)
-//{
-//    uint16_t tempPWM;
-//    static uint8_t temp_constant_time = 0;
-//    if (first_temperate)
-//    {
-//        PID_calc(&imu_temp_pid, temp, 45.0f);
-//        if (imu_temp_pid.out < 0.0f)
-//        {
-//            imu_temp_pid.out = 0.0f;
-//        }
-//        tempPWM = (uint16_t)imu_temp_pid.out;
-//        IMU_temp_PWM(tempPWM);
-//    }
-//    else
-//    {
-//        //ÔÚÃ»ÓÐ´ïµ½ÉèÖÃµÄÎÂ¶È£¬Ò»Ö±×î´ó¹¦ÂÊ¼ÓÈÈ
-//        //in beginning, max power
-//        if (temp > 45.0f)
-//        {
-//            temp_constant_time++;
-//            if (temp_constant_time > 200)
-//            {
-//                //´ïµ½ÉèÖÃÎÂ¶È£¬½«»ý·ÖÏîÉèÖÃÎªÒ»°ë×î´ó¹¦ÂÊ£¬¼ÓËÙÊÕÁ²
-//                first_temperate = 1;
-//                imu_temp_pid.Iout = MPU6500_TEMP_PWM_MAX / 2.0f;
-//            }
-//        }
+/**
+  * @brief          control the temperature of bmi088
+  * @param[in]      temp: the temperature of bmi088
+  * @retval         none
+  */
+/**
+  * @brief          ï¿½ï¿½ï¿½ï¿½bmi088ï¿½ï¿½ï¿½Â¶ï¿½
+  * @param[in]      temp:bmi088ï¿½ï¿½ï¿½Â¶ï¿½
+  * @retval         none
+  */
+static void imu_temp_control(fp32 temp)
+{
+    uint16_t tempPWM;
+    static uint8_t temp_constant_time = 0;
+    if (first_temperate)
+    {
+        PID_calc(&imu_temp_pid, temp, 45.0f);
+        if (imu_temp_pid.out < 0.0f)
+        {
+            imu_temp_pid.out = 0.0f;
+        }
+        tempPWM = (uint16_t)imu_temp_pid.out;
+        IMU_temp_PWM(tempPWM);
+    }
+    else
+    {
+        //ï¿½ï¿½Ã»ï¿½Ð´ïµ½ï¿½ï¿½ï¿½Ãµï¿½ï¿½Â¶È£ï¿½Ò»Ö±ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½
+        //in beginning, max power
+        if (temp > 45.0f)
+        {
+            temp_constant_time++;
+            if (temp_constant_time > 200)
+            {
+                //ï¿½ïµ½ï¿½ï¿½ï¿½ï¿½ï¿½Â¶È£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªÒ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+                first_temperate = 1;
+                imu_temp_pid.Iout = MPU6500_TEMP_PWM_MAX / 2.0f;
+            }
+        }
+taskENTER_CRITICAL_FROM_ISR
+        IMU_temp_PWM(MPU6500_TEMP_PWM_MAX - 1);
+    }
+}
 
-//        IMU_temp_PWM(MPU6500_TEMP_PWM_MAX - 1);
-//    }
-//}
-
-
-//void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-//{
-//    else if(GPIO_Pin == INT1_Gyro_Pin)
-//    {
-//        gyro_update_flag |= 1 << IMU_DR_SHFITS;
-//        if(imu_start_dma_flag)
-//        {
-//            imu_cmd_spi_dma();
-//        }
-//    }
-//}
-
-///**
-//  * @brief          open the SPI DMA accord to the value of imu_update_flag
-//  * @param[in]      none
-//  * @retval         none
-//  */
-///**
-//  * @brief          ¸ù¾Ýimu_update_flagµÄÖµ¿ªÆôSPI DMA
-//  * @param[in]      temp:bmi088µÄÎÂ¶È
-//  * @retval         none
-//  */
-//static void imu_cmd_spi_dma(void)
-//{
-//    UBaseType_t uxSavedInterruptStatus;
-//    uxSavedInterruptStatus = taskENTER_CRITICAL_FROM_ISR();
-
-//    //¿ªÆôÍÓÂÝÒÇµÄDMA´«Êä
-//    if( (gyro_update_flag & (1 << IMU_DR_SHFITS) ) && !(hspi1.hdmatx->Instance->CR & DMA_SxCR_EN) && !(hspi1.hdmarx->Instance->CR & DMA_SxCR_EN)
-//    && !(accel_update_flag & (1 << IMU_SPI_SHFITS)) && !(accel_temp_update_flag & (1 << IMU_SPI_SHFITS)))
-//    {
-//        gyro_update_flag &= ~(1 << IMU_DR_SHFITS);
-//        gyro_update_flag |= (1 << IMU_SPI_SHFITS);
-
-//        HAL_GPIO_WritePin(CS1_Gyro_GPIO_Port, CS1_Gyro_Pin, GPIO_PIN_RESET);
-//        SPI1_DMA_enable((uint32_t)gyro_dma_tx_buf, (uint32_t)gyro_dma_rx_buf, SPI_DMA_GYRO_LENGHT);
-//        taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
-//        return;
-//    }
-//    //¿ªÆô¼ÓËÙ¶È¼ÆµÄDMA´«Êä
-//    if((accel_update_flag & (1 << IMU_DR_SHFITS)) && !(hspi1.hdmatx->Instance->CR & DMA_SxCR_EN) && !(hspi1.hdmarx->Instance->CR & DMA_SxCR_EN)
-//    && !(gyro_update_flag & (1 << IMU_SPI_SHFITS)) && !(accel_temp_update_flag & (1 << IMU_SPI_SHFITS)))
-//    {
-//        accel_update_flag &= ~(1 << IMU_DR_SHFITS);
-//        accel_update_flag |= (1 << IMU_SPI_SHFITS);
-
-//        HAL_GPIO_WritePin(CS1_Accel_GPIO_Port, CS1_Accel_Pin, GPIO_PIN_RESET);
-//        SPI1_DMA_enable((uint32_t)accel_dma_tx_buf, (uint32_t)accel_dma_rx_buf, SPI_DMA_ACCEL_LENGHT);
-//        taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
-//        return;
-//    }
-//		
-//    if((accel_temp_update_flag & (1 << IMU_DR_SHFITS)) && !(hspi1.hdmatx->Instance->CR & DMA_SxCR_EN) && !(hspi1.hdmarx->Instance->CR & DMA_SxCR_EN)
-//    && !(gyro_update_flag & (1 << IMU_SPI_SHFITS)) && !(accel_update_flag & (1 << IMU_SPI_SHFITS)))
-//    {
-//        accel_temp_update_flag &= ~(1 << IMU_DR_SHFITS);
-//        accel_temp_update_flag |= (1 << IMU_SPI_SHFITS);
-
-//        HAL_GPIO_WritePin(CS1_Accel_GPIO_Port, CS1_Accel_Pin, GPIO_PIN_RESET);
-//        SPI1_DMA_enable((uint32_t)accel_temp_dma_tx_buf, (uint32_t)accel_temp_dma_rx_buf, SPI_DMA_ACCEL_TEMP_LENGHT);
-//        taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
-//        return;
-//    }
-//    taskEXIT_CRITICAL_FROM_ISR(uxSavedInterruptStatus);
-//}
-
-
-//void DMA2_Stream0_IRQHandler(void)
-//{
+void DMA2_Stream0_IRQHandler(void)
+{
 
 //    if(__HAL_DMA_GET_FLAG(hspi1.hdmarx, __HAL_DMA_GET_TC_FLAG_INDEX(hspi1.hdmarx)) != RESET)
 //    {
 //        __HAL_DMA_CLEAR_FLAG(hspi1.hdmarx, __HAL_DMA_GET_TC_FLAG_INDEX(hspi1.hdmarx));
 
-//        //gyro read over
-//        //ÍÓÂÝÒÇ¶ÁÈ¡Íê±Ï
-//        if(gyro_update_flag & (1 << IMU_SPI_SHFITS))
-//        {
-//            gyro_update_flag &= ~(1 << IMU_SPI_SHFITS);
-//            HAL_GPIO_WritePin(CS1_Gyro_GPIO_Port, CS1_Gyro_Pin, GPIO_PIN_SET);
-//					
-//						BMI088_gyro_read_over(gyro_dma_rx_buf + BMI088_GYRO_RX_BUF_DATA_OFFSET, bmi088_real_data.gyro, INS_palstance);
-//        }
+        //gyro read over
+        //ï¿½ï¿½ï¿½ï¿½ï¿½Ç¶ï¿½È¡ï¿½ï¿½ï¿½
+        if(gyro_update_flag & (1 << IMU_SPI_SHFITS))
+        {
+            gyro_update_flag &= ~(1 << IMU_SPI_SHFITS);
+            HAL_GPIO_WritePin(CS1_Gyro_GPIO_Port, CS1_Gyro_Pin, GPIO_PIN_SET);
+					
+						BMI088_gyro_read_over(gyro_dma_rx_buf + BMI088_GYRO_RX_BUF_DATA_OFFSET, bmi088_real_data.gyro, INS_palstance);
+        }
 
-//        //accel read over
-//        //¼ÓËÙ¶È¼Æ¶ÁÈ¡Íê±Ï
-//        if(accel_update_flag & (1 << IMU_SPI_SHFITS))
-//        {
-//            accel_update_flag &= ~(1 << IMU_SPI_SHFITS);
-//            HAL_GPIO_WritePin(CS1_Accel_GPIO_Port, CS1_Accel_Pin, GPIO_PIN_SET);
-//					
-//						BMI088_accel_read_over(accel_dma_rx_buf + BMI088_ACCEL_RX_BUF_DATA_OFFSET, bmi088_real_data.accel, &bmi088_real_data.time);
-//        }
-//        //temperature read over
-//        //ÎÂ¶È¶ÁÈ¡Íê±Ï
-//        if(accel_temp_update_flag & (1 << IMU_SPI_SHFITS))
-//        {
-//            accel_temp_update_flag &= ~(1 << IMU_SPI_SHFITS);
-//						HAL_GPIO_WritePin(CS1_Accel_GPIO_Port, CS1_Accel_Pin, GPIO_PIN_SET);
-//					
-//            BMI088_temperature_read_over(accel_temp_dma_rx_buf + BMI088_ACCEL_RX_BUF_DATA_OFFSET, &bmi088_real_data.temp);
-//						imu_temp_control(bmi088_real_data.temp);
-//        }
+        //accel read over
+        //ï¿½ï¿½ï¿½Ù¶È¼Æ¶ï¿½È¡ï¿½ï¿½ï¿½
+        if(accel_update_flag & (1 << IMU_SPI_SHFITS))
+        {
+            accel_update_flag &= ~(1 << IMU_SPI_SHFITS);
+            HAL_GPIO_WritePin(CS1_Accel_GPIO_Port, CS1_Accel_Pin, GPIO_PIN_SET);
+					
+						BMI088_accel_read_over(accel_dma_rx_buf + BMI088_ACCEL_RX_BUF_DATA_OFFSET, bmi088_real_data.accel, &bmi088_real_data.time);
+        }
+        //temperature read over
+        //ï¿½Â¶È¶ï¿½È¡ï¿½ï¿½ï¿½
+        if(accel_temp_update_flag & (1 << IMU_SPI_SHFITS))
+        {
+            accel_temp_update_flag &= ~(1 << IMU_SPI_SHFITS);
+						HAL_GPIO_WritePin(CS1_Accel_GPIO_Port, CS1_Accel_Pin, GPIO_PIN_SET);
+					
+            BMI088_temperature_read_over(accel_temp_dma_rx_buf + BMI088_ACCEL_RX_BUF_DATA_OFFSET, &bmi088_real_data.temp);
+						imu_temp_control(bmi088_real_data.temp);
+        }
 
-//        imu_cmd_spi_dma();//ÎÂ¶È¡¢¼ÓËÙ¶ÈÍ¬Ê±¶ÁÈ¡
-//    }
-//}
+        imu_cmd_spi_dma();//ï¿½Â¶È¡ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½Í¬Ê±ï¿½ï¿½È¡
+    }
+}

@@ -4,6 +4,7 @@
 #include "struct_typedef.h"
 #include "bsp_spi.h"
 #include "bsp_pwm.h"
+#include "bsp_gpio.h"
 
 #define BMI088_TEMP_FACTOR 0.125f
 #define BMI088_TEMP_OFFSET 23.0f
@@ -46,6 +47,11 @@
 #define BMI088_GYRO_250_SEN     0.00013315805450396191230191732547673f
 #define BMI088_GYRO_125_SEN     0.000066579027251980956150958662738366f
 
+
+#define IMU_DR_SHFITS        0
+#define IMU_SPI_SHFITS       1
+#define IMU_UPDATE_SHFITS    2
+#define IMU_NOTIFY_SHFITS    3
 
 typedef __PACKED_STRUCT BMI088_RAW_DATA
 {
@@ -102,11 +108,8 @@ typedef struct BMI088_{
 	bmi088_real_data_t data;
 	BMI088_State state;
 	
-    GPIO_TypeDef *accel_INT1_GPIOx;           // accel中断对应的GPIO
-    uint16_t accel_INT1_pin;               // accel中断对应的引脚号
-    GPIO_TypeDef *gyro_INT1_GPIOx;           // gyro中断对应的GPIO
-    uint16_t gyro_INT1_pin;               // gyro中断对应的引脚号
-	
+	GPIOInstance *accel_exti;
+	GPIOInstance *gyro_exti;
     SPI_Device_t *accel_spi;
     SPI_Device_t *gyro_spi;
 	PWM_Device_t *pwm_info;

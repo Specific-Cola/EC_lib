@@ -8,30 +8,24 @@
 #define SPI_DMA_ACCEL_TEMP_LENGHT 4
 
 
-#define IMU_DR_SHFITS        0
-#define IMU_SPI_SHFITS       1
-#define IMU_UPDATE_SHFITS    2
-#define IMU_NOTIFY_SHFITS    3
-
-
 #define BMI088_GYRO_RX_BUF_DATA_OFFSET  1
 #define BMI088_ACCEL_RX_BUF_DATA_OFFSET 2
 
-//ist83100Ô­Ê¼Êý¾ÝÔÚ»º³åÇøbufµÄÎ»ÖÃ
+//ist83100Ô­Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½Ú»ï¿½ï¿½ï¿½ï¿½ï¿½bufï¿½ï¿½Î»ï¿½ï¿½
 #define IST8310_RX_BUF_DATA_OFFSET 16
 
 
-#define TEMPERATURE_PID_KP 1600.0f //ÎÂ¶È¿ØÖÆPIDµÄkp
-#define TEMPERATURE_PID_KI 0.2f    //ÎÂ¶È¿ØÖÆPIDµÄki
-#define TEMPERATURE_PID_KD 0.0f    //ÎÂ¶È¿ØÖÆPIDµÄkd
+#define TEMPERATURE_PID_KP 1600.0f //ï¿½Â¶È¿ï¿½ï¿½ï¿½PIDï¿½ï¿½kp
+#define TEMPERATURE_PID_KI 0.2f    //ï¿½Â¶È¿ï¿½ï¿½ï¿½PIDï¿½ï¿½ki
+#define TEMPERATURE_PID_KD 0.0f    //ï¿½Â¶È¿ï¿½ï¿½ï¿½PIDï¿½ï¿½kd
 
-#define TEMPERATURE_PID_MAX_OUT   4500.0f //ÎÂ¶È¿ØÖÆPIDµÄmax_out
-#define TEMPERATURE_PID_MAX_IOUT 4400.0f  //ÎÂ¶È¿ØÖÆPIDµÄmax_iout
+#define TEMPERATURE_PID_MAX_OUT   4500.0f //ï¿½Â¶È¿ï¿½ï¿½ï¿½PIDï¿½ï¿½max_out
+#define TEMPERATURE_PID_MAX_IOUT 4400.0f  //ï¿½Â¶È¿ï¿½ï¿½ï¿½PIDï¿½ï¿½max_iout
 
-#define MPU6500_TEMP_PWM_MAX 5000 //mpu6500¿ØÖÆÎÂ¶ÈµÄÉèÖÃTIMµÄÖØÔØÖµ£¬¼´¸øPWM×î´óÎª MPU6500_TEMP_PWM_MAX - 1
+#define MPU6500_TEMP_PWM_MAX 5000 //mpu6500ï¿½ï¿½ï¿½ï¿½ï¿½Â¶Èµï¿½ï¿½ï¿½ï¿½ï¿½TIMï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½PWMï¿½ï¿½ï¿½Îª MPU6500_TEMP_PWM_MAX - 1
 
 
-#define INS_TASK_INIT_TIME 7 //ÈÎÎñ¿ªÊ¼³õÆÚ delay Ò»¶ÎÊ±¼ä
+#define INS_TASK_INIT_TIME 7 //ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ delay Ò»ï¿½ï¿½Ê±ï¿½ï¿½
 
 #define INS_YAW_ADDRESS_OFFSET    0
 #define INS_PITCH_ADDRESS_OFFSET  1
@@ -60,7 +54,7 @@ typedef struct{
   * @retval         none
   */
 /**
-  * @brief          imuÈÎÎñ, ³õÊ¼»¯ bmi088, ist8310, ¼ÆËãÅ·À­½Ç
+  * @brief          imuï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½Ê¼ï¿½ï¿½ bmi088, ist8310, ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½ï¿½ï¿½
   * @param[in]      pvParameters: NULL
   * @retval         none
   */
@@ -74,10 +68,10 @@ extern void AttitudeThread(void const *pvParameters);
   * @retval         none
   */
 /**
-  * @brief          Ð£×¼ÍÓÂÝÒÇ
-  * @param[out]     ÍÓÂÝÒÇµÄ±ÈÀýÒò×Ó£¬1.0fÎªÄ¬ÈÏÖµ£¬²»ÐÞ¸Ä
-  * @param[out]     ÍÓÂÝÒÇµÄÁãÆ¯£¬²É¼¯ÍÓÂÝÒÇµÄ¾²Ö¹µÄÊä³ö×÷Îªoffset
-  * @param[out]     ÍÓÂÝÒÇµÄÊ±¿Ì£¬Ã¿´ÎÔÚgyro_offsetµ÷ÓÃ»á¼Ó1,
+  * @brief          Ð£×¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+  * @param[out]     ï¿½ï¿½ï¿½ï¿½ï¿½ÇµÄ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó£ï¿½1.0fÎªÄ¬ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½
+  * @param[out]     ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½ï¿½ï¿½Æ¯ï¿½ï¿½ï¿½É¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÇµÄ¾ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªoffset
+  * @param[out]     ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½Ê±ï¿½Ì£ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½gyro_offsetï¿½ï¿½ï¿½Ã»ï¿½ï¿½1,
   * @retval         none
   */
 extern void INS_cali_gyro(fp32 cali_scale[3], fp32 cali_offset[3], uint16_t *time_count);
@@ -89,9 +83,9 @@ extern void INS_cali_gyro(fp32 cali_scale[3], fp32 cali_offset[3], uint16_t *tim
   * @retval         none
   */
 /**
-  * @brief          Ð£×¼ÍÓÂÝÒÇÉèÖÃ£¬½«´Óflash»òÕßÆäËûµØ·½´«ÈëÐ£×¼Öµ
-  * @param[in]      ÍÓÂÝÒÇµÄ±ÈÀýÒò×Ó£¬1.0fÎªÄ¬ÈÏÖµ£¬²»ÐÞ¸Ä
-  * @param[in]      ÍÓÂÝÒÇµÄÁãÆ¯
+  * @brief          Ð£×¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½flashï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø·ï¿½ï¿½ï¿½ï¿½ï¿½Ð£×¼Öµ
+  * @param[in]      ï¿½ï¿½ï¿½ï¿½ï¿½ÇµÄ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó£ï¿½1.0fÎªÄ¬ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½
+  * @param[in]      ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½ï¿½ï¿½Æ¯
   * @retval         none
   */
 extern void INS_set_cali_gyro(fp32 cali_scale[3], fp32 cali_offset[3]);
@@ -102,9 +96,9 @@ extern void INS_set_cali_gyro(fp32 cali_scale[3], fp32 cali_offset[3]);
   * @retval         the point of INS_quat
   */
 /**
-  * @brief          »ñÈ¡ËÄÔªÊý
+  * @brief          ï¿½ï¿½È¡ï¿½ï¿½Ôªï¿½ï¿½
   * @param[in]      none
-  * @retval         INS_quatµÄÖ¸Õë
+  * @retval         INS_quatï¿½ï¿½Ö¸ï¿½ï¿½
   */
 extern const fp32 *get_INS_quat_point(void);
 
@@ -117,9 +111,9 @@ extern void GetCurrentQuaternion(fp32 q[4]);
   * @retval         the point of INS_angle
   */
 /**
-  * @brief          »ñÈ¡Å·À­½Ç, 0:yaw, 1:pitch, 2:roll µ¥Î» rad
+  * @brief          ï¿½ï¿½È¡Å·ï¿½ï¿½ï¿½ï¿½, 0:yaw, 1:pitch, 2:roll ï¿½ï¿½Î» rad
   * @param[in]      none
-  * @retval         INS_angleµÄÖ¸Õë
+  * @retval         INS_angleï¿½ï¿½Ö¸ï¿½ï¿½
   */
 extern const fp32 *get_INS_angle_point(void);
 extern void GimbalEulerSystemMeasureUpdate(EulerSystemMeasure_t *IMU);
@@ -130,9 +124,9 @@ extern void GimbalEulerSystemMeasureUpdate(EulerSystemMeasure_t *IMU);
   * @retval         the point of INS_gyro
   */
 /**
-  * @brief          »ñÈ¡½ÇËÙ¶È,0:xÖá, 1:yÖá, 2:rollÖá µ¥Î» rad/s
+  * @brief          ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ù¶ï¿½,0:xï¿½ï¿½, 1:yï¿½ï¿½, 2:rollï¿½ï¿½ ï¿½ï¿½Î» rad/s
   * @param[in]      none
-  * @retval         INS_gyroµÄÖ¸Õë
+  * @retval         INS_gyroï¿½ï¿½Ö¸ï¿½ï¿½
   */
 extern const fp32 *get_gyro_data_point(void);
 
@@ -143,9 +137,9 @@ extern const fp32 *get_gyro_data_point(void);
   * @retval         the point of INS_gyro
   */
 /**
-  * @brief          »ñÈ¡¼ÓËÙ¶È,0:xÖá, 1:yÖá, 2:rollÖá µ¥Î» m/s2
+  * @brief          ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ù¶ï¿½,0:xï¿½ï¿½, 1:yï¿½ï¿½, 2:rollï¿½ï¿½ ï¿½ï¿½Î» m/s2
   * @param[in]      none
-  * @retval         INS_gyroµÄÖ¸Õë
+  * @retval         INS_gyroï¿½ï¿½Ö¸ï¿½ï¿½
   */
 extern const fp32 *get_accel_data_point(void);
 
@@ -155,9 +149,9 @@ extern const fp32 *get_accel_data_point(void);
   * @retval         the point of INS_mag
   */
 /**
-  * @brief          »ñÈ¡¼ÓËÙ¶È,0:xÖá, 1:yÖá, 2:rollÖá µ¥Î» ut
+  * @brief          ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ù¶ï¿½,0:xï¿½ï¿½, 1:yï¿½ï¿½, 2:rollï¿½ï¿½ ï¿½ï¿½Î» ut
   * @param[in]      none
-  * @retval         INS_magµÄÖ¸Õë
+  * @retval         INS_magï¿½ï¿½Ö¸ï¿½ï¿½
   */
 //extern const fp32 *get_mag_data_point(void);
 extern bmi088_real_data_t bmi088_real_data;
