@@ -10,8 +10,11 @@
 // 
 //
 //=====================================================================================================
+#ifndef BSP_SPI_H__
+#define BSP_SPI_H__
+
+#include "struct_typedef.h"
 #include "spi.h"
-#include "stdint.h"
 #include "gpio.h"
 
 #define SPI_DEVICE_CNT 2       // C型开发板引出两路spi,分别连接BMI088/作为扩展IO在8pin牛角座引出
@@ -54,7 +57,7 @@ typedef struct
 } SPI_Register_t;
 
 
-SPI_Device_t *SPIRegister(SPI_Register_t *conf);
+SPI_Device_t *spiRegister(SPI_Register_t *conf);
 
 
 
@@ -68,3 +71,5 @@ void spiTransRecv(SPI_Device_t *spi_ins, uint8_t *ptr_data_rx, uint8_t *ptr_data
 
 
 void spiSetMode(SPI_Device_t *spi_ins, SPI_TXRX_MODE_e spi_mode);
+
+#endif

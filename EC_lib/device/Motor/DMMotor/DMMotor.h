@@ -50,12 +50,14 @@ typedef struct{
 	fp32 kp;
 }DM_MIT_Command_t;
 
-typedef struct{
+typedef struct DM_Motor_{
 	uint8_t statu;  //online 0  / offline 1 
 	DM_Motor_type_t motor_type; //6020   3508   2006   need add pls contact lwt
     DM_Motor_Info_t state_interfaces;
     Can_Device_t *can_info;
 	DM_MIT_Command_t command_interfaces;
+	
+	void (*motorCallback)(struct DM_Motor_*);
 	
 	fp32 p_max;
 	fp32 v_max;
@@ -91,6 +93,6 @@ void dmMotorDisable(DM_Motor_t *motor);
 void dmMotorSetZero(DM_Motor_t *motor);
 void dmMotorClearError(DM_Motor_t *motor);
 Return_t dmMotorSendMessage(DM_Motor_t *motor);
-
+Return_t dmMotorSendAll();
 
 #endif

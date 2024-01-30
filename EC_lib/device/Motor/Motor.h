@@ -30,31 +30,33 @@ typedef struct{
     fp32 angle;
     int32_t rounds;
     fp32 series_angle;
-    int32_t speed_rpm;
+    fp32 speed_rpm;
 	
-    fp32 given_current;
+    fp32 current;
     fp32 torque;
     int32_t temperate;
 }Motor_Info_t;
 
 typedef struct{
-    int16_t speed_rpm;
+    fp32 speed_rpm;
     fp32 angle;
-    int16_t current;
-    int16_t voltage;
-    int16_t command;
+	fp32 torque;
+	fp32 current;
+    fp32 voltage;
+    fp32 command;
+	
 }Motor_Command_t;
 
 typedef struct{
 	uint8_t statu;  //online 0  / offline 1 
-	uint16_t motor_type;
+	uint32_t motor_type;
     Motor_Info_t state_interfaces;
     Motor_Command_t command_interfaces;
 	
 	union{
 		DJI_Motor_t *dji;
 		DM_Motor_t 	*dm;
-	}motor;
+	};
 	
 }Motor_t;
 
@@ -69,16 +71,42 @@ typedef union{
 typedef struct{
     
     PIDInstance *pid;
+    float *fdb_src;
 
-}Controller_t;
+}Speed_Controller_t;
+typedef struct{
 
+    cascadePIDInstacne *cascade_pid;
+    float *out_fdb_src;
+    float *in_fdb_src;
+
+}Position_Controller_t;
+
+/***                        添加电机种类时必须修改的部分START                                         ***/
 Motor_t *motorAdd(Motor_Register_t *reg);
 void motorEnable(Motor_t *motor);
 void motorDisable(Motor_t *motor);
-void motorInfoUpdate(Motor_t *motor);
+
+Return_t motorSendMessage(Motor_t *motor);
+Return_t motorSendAll();
+
+//也可以使用以下函数发送
+extern Return_t djiMotorSendMessage();
+extern Return_t dmMotorSendMessage(DM_Motor_t *motor);
+extern Return_t dmMotorSendAll();
+/***                        添加电机种类时必须修改的部分END                                         ***/
+
+
+
+//电机基础控制函数
 void motorSpeedControl(Motor_t *motor,Speed_Controller_t *controller);//todo    移到电机总
 Speed_Controller_t *speedControllerInit(PID_Init_Config_s *config);
-void motorPositionControl(DJI_Motor_t *motor);
-Return_t motorSendMessage();
+void motorPositionControl(Motor_t *motor,Position_Controller_t *controller);//todo   移到电机总
+Position_Controller_t *positionControllerInit(cascade_PID_Init_Config_s *config,float *out_fdb);
+
+//电机测试应用
+void motor_SwitchRing(Motor_t *motor,Position_Controller_t *controller);
+
+
 
 #endif

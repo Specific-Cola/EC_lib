@@ -10,10 +10,11 @@
 // 
 //
 //=====================================================================================================
-#ifndef BSP_PWM_H
-#define BSP_PWM_H
+#ifndef BSP_PWM_H__
+#define BSP_PWM_H__
 
 #include "struct_typedef.h"
+
 #define PWM_DEVICE_CNT     16
 
 typedef struct PWM_Device_
@@ -31,7 +32,7 @@ typedef struct
 {
     TIM_HandleTypeDef *htim;                 // TIM句柄
     uint32_t channel;                        // 通道
-    uint32_t period;                         // 周期  单位毫秒
+	fp32 period;                         // 周期  单位毫秒
     float dutyratio;                      // 占空比
     void (*callback)(PWM_Device_t*); // DMA传输完成回调函数
     void *id;                                // 实例ID
@@ -42,7 +43,7 @@ PWM_Device_t *pwmRegister(PWM_Register_t *config);
 void pwmOnActivate(PWM_Device_t *pwm);
 void pwmOnDeactivate(PWM_Device_t *pwm);
 void pwmSetDuty(PWM_Device_t *pwm,float dutyratio);
-void pwmSetPeriod(PWM_Device_t *pwm,uint32_t period);
+void pwmSetPeriod(PWM_Device_t *pwm,fp32 period);
 
 
 #endif

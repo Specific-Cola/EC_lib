@@ -34,7 +34,8 @@ RM_Remote_t *rmRemoteAdd(UART_HandleTypeDef *huart)
     usart.rx_len = RC_FRAME_LENGTH;
     usart.usart_device_callback = rmRemoteCallback;
     remote->usart_info = usartDeviceRegister(&usart);
-    remote_instance = remote;
+	
+	remote_instance = remote;
     return remote;
 }
 

@@ -19,7 +19,7 @@
 #include "bsp_can.h"
 #include "bsp_dwt.h"
 
-#define MAX_DJI_MOTOR_NUM      21 //姑且算一个can7个电机
+#define MAX_DJI_MOTOR_NUM      14 //姑且算一个can7个电机
 #define OFFLINE_TIME_MAX       0.1//单位s
 typedef enum
 {
@@ -35,17 +35,10 @@ typedef struct{
     int16_t speed_rpm;
     int16_t given_current;
     uint8_t temperate;
-    uint16_t last_ecd;
 	
-    fp32 angle;
-
 }DJI_Motor_Info_t;
 
 typedef struct{
-    int16_t speed_rpm;
-    fp32 angle;
-    int16_t current;
-    int16_t voltage;
     int16_t command;
 }DJI_Command_t;
 
@@ -56,6 +49,7 @@ typedef struct DJI_Motor_{
     Can_Device_t *can_info;
     DJI_Command_t command_interfaces;
 	
+	void (*motorCallback)(struct DJI_Motor_*);
 }DJI_Motor_t;
 
 typedef struct{
@@ -65,27 +59,10 @@ typedef struct{
 	uint8_t id;
 }DJI_Motor_Register_t;
 
-typedef struct{
-    
-    PIDInstance *pid;
-    float *fdb_src;
-
-}Speed_Controller_t;
-typedef struct{
-
-    cascadePIDInstacne *cascade_pid;
-    float *out_fdb_src;
-    float *in_fdb_src;
-
-}Position_Controller_t;
 
 DJI_Motor_t *djiMotorAdd(DJI_Motor_Register_t *reg);
 void djiMotorDelete(DJI_Motor_t *motor);
 void djiMotorInfoUpdate(DJI_Motor_t *motor,uint8_t *data);
-void djiMotorSpeedControl(DJI_Motor_t *motor,Speed_Controller_t *controller);//todo    移到电机总
-Speed_Controller_t *speedControllerInit(PID_Init_Config_s *config);
-void djiMotorPositionControl(DJI_Motor_t *motor,Position_Controller_t *controller);//todo   移到电机总
-Position_Controller_t *positionControllerInit(cascade_PID_Init_Config_s *config,float *out_fdb);
 Return_t djiMotorSendMessage();
-void djiMotor_SwitchRing(DJI_Motor_t *motor,Position_Controller_t *controller);
+
 #endif // !DJIMOTOR_H__

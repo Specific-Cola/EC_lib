@@ -11,9 +11,10 @@
 //
 //=====================================================================================================
 #include "bsp_can.h"
-#include "string.h"
-#include "stdlib.h"
 #include "main.h"
+
+#include <string.h>
+#include <stdlib.h>
 
 static Can_Device_t *can_device[CAN_MX_REGISTER_CNT] = {NULL};
 static uint8_t id_cnt; // 全局CAN实例索引,每次有新的模块注册会自增
@@ -96,10 +97,12 @@ void canOnDeactivate(void)
  
 }
 
-void canSendMessage(Can_Device_t *instance, uint8_t *message)
+Return_t canSendMessage(Can_Device_t *instance, uint8_t *message)
 {    
     memcpy(instance->tx_buff, message, instance->tx_config.DLC);
-    HAL_CAN_AddTxMessage(instance->can_handle, &instance->tx_config, message, &instance->tx_mailbox);
+    if(HAL_CAN_AddTxMessage(instance->can_handle, &instance->tx_config, message, &instance->tx_mailbox)==HAL_ERROR)
+		return RETURN_ERROR;
+	return RETURN_SUCCESS;
 }
 
 static void canReceiveMessage(CAN_HandleTypeDef *hcan)

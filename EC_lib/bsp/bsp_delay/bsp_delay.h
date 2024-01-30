@@ -10,12 +10,12 @@
 // 
 //
 //=====================================================================================================
-#ifndef BSP_DELAY_H
-#define BSP_DELAY_H
+#ifndef BSP_DELAY_H__
+#define BSP_DELAY_H__
 #include "struct_typedef.h"
 
 extern void delayInit(void);
-extern void delayUs(uint16_t nus);
+extern void delayUs(uint32_t nus);
 extern void delayMs(uint16_t nms);
 #endif
 
