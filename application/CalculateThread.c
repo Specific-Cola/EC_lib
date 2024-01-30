@@ -1,6 +1,10 @@
 #include "CalculateThread.h"
 #include "RM_remote.h"
 #include "Motor.h"
+#include "Buzzer.h"
+
+#include "little_star.h"
+#include "shengdanxing.h"
 
 #include "main.h"
 #include "cmsis_os.h"
@@ -9,7 +13,7 @@
 
 Motor_t *my_motor;
 Motor_t *dm_motor;
-
+Buzzer_t *my_buzzer;
 
 //Speed_Controller_t *my_controller;
 //PID_Init_Config_s my_pid;
@@ -19,9 +23,29 @@ cascade_PID_Init_Config_s my_pid;
 RM_Remote_t *my_remote;
 
 
+
+
 void CalculateThread(void const * argument)
 {
-	osDelay(1000);
+	Buzzer_Register_t buzzer_reg;
+	
+	buzzer_reg.htim = &htim4;
+	buzzer_reg.channel = TIM_CHANNEL_3;
+	
+	my_buzzer = buzzerInit(&buzzer_reg);
+	buzzerSetVolume(my_buzzer,1);
+	
+	
+//	buzzerOnce(my_buzzer);
+	buzzerSeveralTimes(my_buzzer,5,500);
+//	buzzerSetMusicScore(my_buzzer,little_star_score,48,LITTLE_STAR_BPM,LITTLE_STAR_STANDARD);
+//	buzzerSetMusicScore(my_buzzer,shengdanxing_score,sizeof(shengdanxing_score)/4,SHENGDANXING_BPM,SHENGDANXING_STANDARD);
+	
+	osDelay(500);
+	
+	
+	
+	
 	
 //	DJI_Motor_Register_t motor_reg;
 	Motor_Register_t motor_reg;

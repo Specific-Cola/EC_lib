@@ -23,7 +23,7 @@ void delayInit(void)
 
 }
 
-void delayUs(uint16_t nus)
+void delayUs(uint32_t nus)
 {
 	
     uint32_t ticks = 0;

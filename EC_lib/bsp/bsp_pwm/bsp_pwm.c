@@ -73,7 +73,7 @@ void pwmOnDeactivate(PWM_Device_t *pwm)
 {
     HAL_TIM_PWM_Stop(pwm->htim, pwm->channel);
 }
-void pwmSetPeriod(PWM_Device_t *pwm, uint32_t period)
+void pwmSetPeriod(PWM_Device_t *pwm, fp32 period)
 {
     __HAL_TIM_SetAutoreload(pwm->htim, period*((pwm->tclk)/(pwm->htim->Init.Prescaler+1))/1000);
 }

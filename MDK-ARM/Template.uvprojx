@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx,ARM_MATH_CM4,ARM_MATH_ROUNDING,ARM_MATH_MATRIX_CHECK,__TARGET_FPU_VFP,__FPU_PRESENT</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/DSP/Include;../Drivers/CMSIS/Include;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../application;../EC_lib/config;../EC_lib/bsp/bsp_timer;../EC_lib/bsp/bsp_dwt;../EC_lib/bsp/bsp_can;../EC_lib/bsp/bsp_uart;../EC_lib/bsp/bsp_spi;../EC_lib/bsp/bsp_pwm;../EC_lib/bsp/bsp_delay;..\EC_lib\bsp\bsp_exti;../EC_lib/algorithm;../EC_lib/algorithm/PID;../EC_lib/algorithm/crc;../EC_lib/algorithm/LQR;../EC_lib/algorithm/KalmanFilter;../EC_lib/algorithm/Mahony;../EC_lib/device/BMI088;../EC_lib/device/RM_remote;../EC_lib/device/Motor;../EC_lib/device/Motor/djiMotor;../EC_lib/device/Motor/DMMotor</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/DSP/Include;../Drivers/CMSIS/Include;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../application;..\application\songs;../EC_lib/config;../EC_lib/bsp/bsp_timer;../EC_lib/bsp/bsp_dwt;../EC_lib/bsp/bsp_can;../EC_lib/bsp/bsp_uart;../EC_lib/bsp/bsp_spi;../EC_lib/bsp/bsp_pwm;../EC_lib/bsp/bsp_delay;../EC_lib/bsp/bsp_exti;../EC_lib/algorithm;../EC_lib/algorithm/PID;../EC_lib/algorithm/crc;../EC_lib/algorithm/LQR;../EC_lib/algorithm/KalmanFilter;../EC_lib/algorithm/Mahony;../EC_lib/device/BMI088;../EC_lib/device/RM_remote;../EC_lib/device/Buzzer;../EC_lib/device/Motor;../EC_lib/device/Motor/djiMotor;../EC_lib/device/Motor/DMMotor</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -742,6 +742,11 @@
               <FileName>RM_remote.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\EC_lib\device\RM_remote\RM_remote.c</FilePath>
+            </File>
+            <File>
+              <FileName>Buzzer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\device\Buzzer\Buzzer.c</FilePath>
             </File>
           </Files>
         </Group>

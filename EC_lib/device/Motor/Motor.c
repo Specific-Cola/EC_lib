@@ -18,7 +18,7 @@
 #include <string.h>
 
 static Motor_t *motor_instance[MAX_MOTOR_NUM];
-static uint8_t id_cnt; //记录电机数量
+static uint8_t id_cnt=0; //记录电机数量
 
 #define get_motor_mask(indicator) ((indicator)->motor_type&0xFFF0)
 
