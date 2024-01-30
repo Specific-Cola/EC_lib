@@ -618,11 +618,6 @@
               <FileType>1</FileType>
               <FilePath>..\application\CalculateThread.c</FilePath>
             </File>
-            <File>
-              <FileName>AttitudeThread.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\application\AttitudeThread.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -757,25 +752,10 @@
               <FileType>1</FileType>
               <FilePath>..\EC_lib\device\referee\referee_sender.c</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>EC_lib/device/BMI088</GroupName>
-          <Files>
             <File>
-              <FileName>BMI088driver.c</FileName>
+              <FileName>referee_receiver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EC_lib\device\BMI088\BMI088driver.c</FilePath>
-            </File>
-            <File>
-              <FileName>BMI088Middleware.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EC_lib\device\BMI088\BMI088Middleware.c</FilePath>
-            </File>
-            <File>
-              <FileName>BMI088reg.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\EC_lib\device\BMI088\BMI088reg.h</FilePath>
+              <FilePath>..\EC_lib\device\referee\referee_receiver.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -866,11 +846,6 @@
               <FileName>Parameter.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\EC_lib\config\Parameter.h</FilePath>
-            </File>
-            <File>
-              <FileName>referee_info.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\EC_lib\device\referee\referee_info.h</FilePath>
             </File>
           </Files>
         </Group>

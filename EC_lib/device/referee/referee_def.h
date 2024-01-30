@@ -7,6 +7,7 @@
 /*****************************1.6.1裁判系统数据**********************/
 #define ROBOT_INTERACTION_DATA_LENGTH      113u
 #define CUSTOM_ROBOT_DATA_LENGTH            30u
+#define HEADER_SOF                         0xA5
 
 typedef __PACKED_STRUCT
 {
@@ -16,6 +17,69 @@ typedef __PACKED_STRUCT
     uint8_t CRC8;         // 枕头CRC8校验
 }
 frame_header_t;
+
+
+/****************************cmd_id命令码说明****************************/
+
+/* 命令码ID,用来判断接收的是什么数据 */
+typedef enum
+{
+    ID_game_state = 0x0001,                // 比赛状态数据
+    ID_game_result = 0x0002,               // 比赛结果数据
+    ID_game_robot_survivors = 0x0003,      // 比赛机器人血量数据
+    ID_event_data = 0x0101,                // 场地事件数据
+    ID_supply_projectile_action = 0x0102,  // 场地补给站动作标识数据
+    ID_supply_projectile_booking = 0x0103, // 场地补给站预约子弹数据
+    ID_judge_warning = 0x0104,             // 裁判警告数据
+    ID_dart_data = 0x0105,                 // 飞镖发射相关数据
+    ID_game_robot_state = 0x0201,          // 机器人状态数据
+    ID_power_heat_data = 0x0202,           // 实时功率热量数据
+    ID_game_robot_pos = 0x0203,            // 机器人位置数据
+    ID_buff_musk = 0x0204,                 // 机器人增益数据
+    ID_aerial_robot_energy = 0x0205,       // 空中机器人能量状态数据
+    ID_robot_hurt = 0x0206,                // 伤害状态数据
+    ID_shoot_data = 0x0207,                // 实时射击数据
+    ID_bullets_limit = 0x0208,             // 允许发单量
+    ID_rfid_data = 0x0209,                 // RFID模块状态
+    ID_dart_command = 0x020A,              // 飞镖选手指令数据
+    ID_all_robot_pos = 0x020B,             // 发给哨兵的机器人位置数据
+    ID_radar_marking = 0x020C,             // 雷达标记进度
+    ID_sentry_message_sync = 0x202D,       // 哨兵自主决策信息同步
+    ID_radar_message_sync = 0x020E,        // 雷达自主决策信息同步
+    ID_student_interactive = 0x0301,       // 机器人间交互数据
+    //  后续更新
+
+} CmdID_e;
+
+/* 命令码数据段长,根据官方协议来定义长度，还有自定义数据长度 */
+typedef enum
+{
+    LEN_game_state = 11,                                  // 0x0001
+    LEN_game_result = 1,                                  // 0x0002
+    LEN_game_robot_HP = 32,                               // 0x0003
+    LEN_event_data = 4,                                   // 0x0101
+    LEN_supply_projectile_action = 4,                     // 0x0102
+    LEN_judge_warning = 3,                                // 0x0104
+    LEN_dart_data = 3,                                    // 0x0105
+    LEN_game_robot_state = 13,                            // 0x0201
+    LEN_power_heat_data = 16,                             // 0x0202
+    LEN_game_robot_pos = 16,                              // 0x0203
+    LEN_buff_musk = 6,                                    // 0x0204
+    LEN_aerial_robot_energy = 2,                          // 0x0205
+    LEN_robot_hurt = 1,                                   // 0x0206
+    LEN_shoot_data = 7,                                   // 0x0207
+    LEN_bullets_limit = 6,                                // 0x0208
+    LEN_rfid_data = 4,                                    // 0x0209,
+    LEN_dart_command = 6,                                 // 0x020A,
+    LEN_all_robot_pos = 40,                                // 0x020B,
+    LEN_radar_marking = 6,                                 // 0x020C,
+    LEN_sentry_message_sync = 4,                           // 0x202D,
+    LEN_radar_message_sync = 1,                            // 0x020E,
+    LEN_receive_data = 6 + ROBOT_INTERACTION_DATA_LENGTH, // 0x0301
+
+} RefereeDataLength_e;
+
+/******************具体各种命令码内容***************/
 
 typedef __PACKED_STRUCT
 { // 0x0001

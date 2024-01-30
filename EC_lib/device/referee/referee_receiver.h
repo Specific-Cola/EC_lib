@@ -2,11 +2,22 @@
 #define REFEREE_RECEIVER_H__
 
 #include "bsp_usart.h"
-
+#include "referee_def.h"
 
 
 
 typedef struct{
+    frame_header_t frame_header;
+    uint16_t cmd_id;
+    union data
+    {
+        uint8_t raw_data[119];
+        
+        
+    };
+    
+    uint16_t frame_tail;
+
 
 
 

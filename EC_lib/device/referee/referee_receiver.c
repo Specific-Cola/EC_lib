@@ -1,9 +1,17 @@
 #include "referee_receiver.h"
 #include "main.h"
 
-static Referee_Receiver_t *referee_receiver_instance;   
+static Referee_Receiver_t *referee_receiver_instance;  
 
-Referee_Receiver_t *refereeReceiverAdd(Usart_Device_t *huart)
+static refereeDataSolve(uint8_t *buff)
+{
+    
+
+
+
+}
+
+Referee_Receiver_t *refereeReceiverAdd(UART_HandleTypeDef *huart)
 {
     Referee_Receiver_t *receiver = (Referee_Receiver_t*)malloc(sizeof(Referee_Receiver_t));
     Usart_Register_t usart;
@@ -21,5 +29,6 @@ Referee_Receiver_t *refereeReceiverAdd(Usart_Device_t *huart)
 
 void refereeReceiverCallback(Usart_Device_t *usart)
 {
-    
+    refereeDataSolve(usart->rx_buff);
+
 }

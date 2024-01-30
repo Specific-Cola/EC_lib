@@ -44,12 +44,6 @@ void rmRemoteCallback(Usart_Device_t *usart)
     static uint16_t this_time_rx_len = 0;
     if ((usart->usart_handle->hdmarx->Instance->CR & DMA_SxCR_CT) == RESET)
     {
-        /* Current memory buffer used is Memory 0 */
-
-        //disable DMA
-        //失效DMA
-        __HAL_DMA_DISABLE(usart->usart_handle->hdmarx);
-
         //get receive data length, length = set_data_length - remain_length
         //获取接收数据长度,长度 = 设定长度 - 剩余长度
         this_time_rx_len = USART_RXBUFF_LIMIT/2 - usart->usart_handle->hdmarx->Instance->NDTR;
@@ -60,11 +54,7 @@ void rmRemoteCallback(Usart_Device_t *usart)
 
         //set memory buffer 1
         //设定缓冲区1
-       usart->usart_handle->hdmarx->Instance->CR |= DMA_SxCR_CT;
-            
-        // //enable DMA
-        // //使能DMA
-//        // __HAL_DMA_ENABLE(usart->usart_handle->hdmarx);//回调外面打开了
+        usart->usart_handle->hdmarx->Instance->CR |= DMA_SxCR_CT;
 
         if (this_time_rx_len == RC_FRAME_LENGTH)
         {
@@ -76,11 +66,6 @@ void rmRemoteCallback(Usart_Device_t *usart)
     }
     else//使用缓存区2
     {
-        /* Current memory buffer used is Memory 1 */
-        // disable DMA
-        // 失效DMA
-        __HAL_DMA_DISABLE(usart->usart_handle->hdmarx);
-
         // get receive data length, length = set_data_length - remain_length
         // 获取接收数据长度,长度 = 设定长度 - 剩余长度
         this_time_rx_len = USART_RXBUFF_LIMIT / 2 - usart->usart_handle->hdmarx->Instance->NDTR;
@@ -91,11 +76,7 @@ void rmRemoteCallback(Usart_Device_t *usart)
 
         // set memory buffer 0
         // 设定缓冲区0
-        DMA1_Stream1->CR &= ~(DMA_SxCR_CT);
-
-        // enable DMA
-        // 使能DMA
-        //  __HAL_DMA_ENABLE(usart->usart_handle->hdmarx);//外面打开了
+        usart->usart_handle->hdmarx->Instance->CR &= ~(DMA_SxCR_CT);
 
         if (this_time_rx_len == RC_FRAME_LENGTH)
         {

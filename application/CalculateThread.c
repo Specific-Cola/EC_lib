@@ -3,8 +3,8 @@
 #include "Motor.h"
 #include "Buzzer.h"
 
-#include "little_star.h"
-#include "shengdanxing.h"
+//#include "little_star.h"
+//#include "shengdanxing.h"
 
 #include "main.h"
 #include "cmsis_os.h"
