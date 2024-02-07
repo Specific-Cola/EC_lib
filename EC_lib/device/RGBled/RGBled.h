@@ -9,28 +9,27 @@
 // 
 //
 //=====================================================================================================
-#ifndef BUZZER_H__
-#define BUZZER_H__
+#ifndef RGBLED_H__
+#define RGBLED_H__
 
 #include "bsp_pwm.h"
 #include "struct_typedef.h"
 
-#define MAX_BUZZER_NUM 1//理论上C板应该只有一个蜂鸣器
+#define MAX_LED_NUM 1//理论上C板应该也只有一个RGB灯
 
 typedef struct{
 	
-	PWM_Device_t *pwm;
-	uint8_t *note;
-	uint8_t *rhythm;
-	uint8_t standard;
-	fp32 volume;
+	PWM_Device_t *pwm_red;
+	PWM_Device_t *pwm_blue;
+	PWM_Device_t *pwm_green;
+	
+	uint8_t color[3];
 	
 }Buzzer_t;
 
 typedef struct{
 	
-    TIM_HandleTypeDef *htim;                 // TIM句柄
-    uint32_t channel;                        // 通道
+	
 	
 }Buzzer_Register_t;
 
@@ -43,5 +42,5 @@ void buzzerSetVolume(Buzzer_t *buzzer,fp32 percent);
 void buzzerSetMusicScore(Buzzer_t *buzzer,int16_t *score,uint32_t length,uint16_t bpm,uint8_t standard);
 
 
-#endif // !BUZZER_H__
+#endif // !RGB_H__
 

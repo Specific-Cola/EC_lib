@@ -19,13 +19,13 @@ static uint8_t rxdata[10];
 static fp32 INS_palstance[3] = {0.0f, 0.0f, 0.0f};
 
 uint8_t gyro_dma_rx_buf[SPI_DMA_GYRO_LENGHT];
-uint8_t gyro_dma_tx_buf[SPI_DMA_GYRO_LENGHT] = {0x82,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
+static uint8_t gyro_dma_tx_buf[SPI_DMA_GYRO_LENGHT] = {0x82,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
 
 uint8_t accel_dma_rx_buf[SPI_DMA_ACCEL_LENGHT];
-uint8_t accel_dma_tx_buf[SPI_DMA_ACCEL_LENGHT] = {0x92,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
+static uint8_t accel_dma_tx_buf[SPI_DMA_ACCEL_LENGHT] = {0x92,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
 
 uint8_t accel_temp_dma_rx_buf[SPI_DMA_ACCEL_TEMP_LENGHT];
-uint8_t accel_temp_dma_tx_buf[SPI_DMA_ACCEL_TEMP_LENGHT] = {0xA2,0xFF,0xFF,0xFF};
+static uint8_t accel_temp_dma_tx_buf[SPI_DMA_ACCEL_TEMP_LENGHT] = {0xA2,0xFF,0xFF,0xFF};
 
 fp32 BMI088_ACCEL_SEN = BMI088_ACCEL_3G_SEN;
 fp32 BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
@@ -562,27 +562,27 @@ void BMI088_read_accel_who_am_i(void)
 
 void BMI088_temperature_read_over(uint8_t *rx_buf, fp32 *temperate)
 {
-    int16_t bmi088_raw_temp;
-    bmi088_raw_temp = (int16_t)((rx_buf[0] << 3) | (rx_buf[1] >> 5));
+    bmi088_instance->raw_data.temp = (int16_t)((rx_buf[0] << 3) | (rx_buf[1] >> 5));
 
-    if (bmi088_raw_temp > 1023)
+    if (bmi088_instance->raw_data.temp > 1023)
     {
-        bmi088_raw_temp -= 2048;
+        bmi088_instance->raw_data.temp -= 2048;
     }
-    *temperate = bmi088_raw_temp * BMI088_TEMP_FACTOR + BMI088_TEMP_OFFSET;
+    *temperate = bmi088_instance->raw_data.temp * BMI088_TEMP_FACTOR + BMI088_TEMP_OFFSET;
 
 }
 
 void BMI088_accel_read_over(uint8_t *rx_buf, fp32 accel[3], fp32 *time)
 {
-    int16_t bmi088_raw_temp;
     uint32_t sensor_time;
-    bmi088_raw_temp = (int16_t)((rx_buf[1]) << 8) | rx_buf[0];
-    accel[0] = bmi088_raw_temp * BMI088_ACCEL_SEN;
-    bmi088_raw_temp = (int16_t)((rx_buf[3]) << 8) | rx_buf[2];
-    accel[1] = bmi088_raw_temp * BMI088_ACCEL_SEN;
-    bmi088_raw_temp = (int16_t)((rx_buf[5]) << 8) | rx_buf[4];
-    accel[2] = bmi088_raw_temp * BMI088_ACCEL_SEN;
+	
+    bmi088_instance->raw_data.accel[0] = (int16_t)((rx_buf[1]) << 8) | rx_buf[0];
+    accel[0] = bmi088_instance->raw_data.accel[0] * BMI088_ACCEL_SEN;
+    bmi088_instance->raw_data.accel[1] = (int16_t)((rx_buf[3]) << 8) | rx_buf[2];
+    accel[1] = bmi088_instance->raw_data.accel[1] * BMI088_ACCEL_SEN;
+    bmi088_instance->raw_data.accel[2] = (int16_t)((rx_buf[5]) << 8) | rx_buf[4];
+    accel[2] = bmi088_instance->raw_data.accel[2] * BMI088_ACCEL_SEN;
+	
     sensor_time = (uint32_t)((rx_buf[8] << 16) | (rx_buf[7] << 8) | rx_buf[6]);
     *time = sensor_time * 39.0625f;
 
@@ -590,16 +590,15 @@ void BMI088_accel_read_over(uint8_t *rx_buf, fp32 accel[3], fp32 *time)
 
 void BMI088_gyro_read_over(uint8_t *rx_buf, fp32 gyro[3], fp32 palstance[3])
 {
-    int16_t bmi088_raw_temp;
-    bmi088_raw_temp = (int16_t)((rx_buf[1]) << 8) | rx_buf[0];
-    gyro[0] = bmi088_raw_temp * BMI088_GYRO_SEN;
-    palstance[0] = bmi088_raw_temp / 32768.0f * 2000.0f;
-    bmi088_raw_temp = (int16_t)((rx_buf[3]) << 8) | rx_buf[2];
-    gyro[1] = bmi088_raw_temp * BMI088_GYRO_SEN;
-    palstance[1] = bmi088_raw_temp / 32768.0f * 2000.0f;
-    bmi088_raw_temp = (int16_t)((rx_buf[5]) << 8) | rx_buf[4];
-    gyro[2] = bmi088_raw_temp * BMI088_GYRO_SEN;
-    palstance[2] = bmi088_raw_temp / 32768.0f * 2000.0f;
+    bmi088_instance->raw_data.gyro[0] = (int16_t)((rx_buf[1]) << 8) | rx_buf[0];
+    gyro[0] = bmi088_instance->raw_data.gyro[0] * BMI088_GYRO_SEN;
+    palstance[0] = bmi088_instance->raw_data.gyro[0] / 32768.0f * 2000.0f;
+    bmi088_instance->raw_data.gyro[1] = (int16_t)((rx_buf[3]) << 8) | rx_buf[2];
+    gyro[1] = bmi088_instance->raw_data.gyro[1] * BMI088_GYRO_SEN;
+    palstance[1] = bmi088_instance->raw_data.gyro[1] / 32768.0f * 2000.0f;
+    bmi088_instance->raw_data.gyro[2] = (int16_t)((rx_buf[5]) << 8) | rx_buf[4];
+    gyro[2] = bmi088_instance->raw_data.gyro[2] * BMI088_GYRO_SEN;
+    palstance[2] = bmi088_instance->raw_data.gyro[2] / 32768.0f * 2000.0f;
 }
 
 void BMI088_read(fp32 gyro[3], fp32 accel[3], fp32 *temperate)

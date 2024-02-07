@@ -8,6 +8,7 @@
 #include "bsp_delay.h"
 
 #define BMI088_USE_SPI 1
+//#define BMI088_USE_IIC 1 //todo:后续看需求可以不全IIC驱动代码
 
 #define BMI088_TEMP_FACTOR 0.125f
 #define BMI088_TEMP_OFFSET 23.0f

@@ -758,6 +758,11 @@
               <FileType>1</FileType>
               <FilePath>..\EC_lib\device\referee\referee_sender.c</FilePath>
             </File>
+            <File>
+              <FileName>RGBled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EC_lib\device\RGBled\RGBled.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
