@@ -198,12 +198,10 @@ static void bmi088GyroSpiCallback(SPI_Device_t* device){
 	if(bmi088_instance->gyro_spi == device){
         if(bmi088_instance->state.gyro_update_flag & (1 << IMU_SPI_SHFITS))
         {
-			
             bmi088_instance->state.gyro_update_flag &= ~(1 << IMU_SPI_SHFITS);
-            HAL_GPIO_WritePin(CS1_Gyro_GPIO_Port, CS1_Gyro_Pin, GPIO_PIN_SET);
-					
 			BMI088_gyro_read_over(gyro_dma_rx_buf + BMI088_GYRO_RX_BUF_DATA_OFFSET, bmi088_instance->data.gyro, INS_palstance);
         }
+		imu_cmd_spi_dma();
     }
 }
 
